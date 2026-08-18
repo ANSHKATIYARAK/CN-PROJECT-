@@ -151,6 +151,8 @@ class OSPFSimulator {
   computeSPF(startNodeId) {
     const { distances, previous } = this.getSPT(startNodeId);
     const routes = [];
+    const currentNode = this.topology.nodes.find(x => x.id === startNodeId);
+    const isNodeInStub = currentNode && (currentNode.area === 30 || currentNode.isStub);
 
     this.topology.nodes.forEach(n => {
       if (n.id !== startNodeId && distances[n.id] !== Infinity) {
@@ -169,8 +171,13 @@ class OSPFSimulator {
           interfaceName = `GigabitEthernet0/${prevStep.link.id.replace('l', '')}`;
         }
 
-        const isInterArea = n.area !== this.topology.nodes.find(x => x.id === startNodeId).area;
-        
+        const isInterArea = n.area !== currentNode.area;
+
+        // Totally Stubby Area: block all inter-area summaries
+        if (this.multiAreaEnabled && isNodeInStub && isInterArea) {
+          return; // Suppress inter-area routes inside Totally Stubby Area
+        }
+
         // Summarization behavior check
         let prefix = n.subnet || `10.${n.area}.0.0/16`;
         if (!this.multiAreaEnabled) {
@@ -188,8 +195,7 @@ class OSPFSimulator {
     });
 
     // Inject default route for Admin Area 30 stub nodes
-    const currentNode = this.topology.nodes.find(x => x.id === startNodeId);
-    if (currentNode && (currentNode.area === 30 || currentNode.isStub) && this.multiAreaEnabled) {
+    if (currentNode && isNodeInStub && this.multiAreaEnabled) {
       routes.push({
         type: 'O*IA',
         prefix: '0.0.0.0/0',
@@ -442,8 +448,10 @@ function logTestConsole(msg, type = 'info') {
 // Timer Preset Switcher
 function setTimerProfile(profile) {
   sim.timerProfile = profile;
-  document.getElementById('standardTimersBtn').classList.toggle('active', profile === 'standard');
-  document.getElementById('optimizedTimersBtn').classList.toggle('active', profile === 'optimized');
+  const stdBtn = document.getElementById('standardTimersBtn');
+  const optBtn = document.getElementById('optimizedTimersBtn');
+  if (stdBtn) stdBtn.classList.toggle('active', profile === 'standard');
+  if (optBtn) optBtn.classList.toggle('active', profile === 'optimized');
 
   const presetSelect = document.getElementById('timer-preset-select');
   presetSelect.value = profile;
@@ -480,7 +488,8 @@ function toggleSelectedLink(status) {
 
     link.state = status ? 'UP' : 'DOWN';
     sim.spfRuns++;
-    document.getElementById('globalSpfCount').textContent = sim.spfRuns;
+    const spfEl = document.getElementById('globalSpfCount');
+    if (spfEl) spfEl.textContent = sim.spfRuns;
 
     logTestConsole(`[ INTERVENTION ] Link ${link.source} <-> ${link.target} changed state to ${link.state}`);
     sim.computeAllRoutes();
@@ -502,7 +511,8 @@ function simulateLinkFlapping(linkId) {
   if (link) {
     link.state = link.state === 'UP' ? 'DOWN' : 'UP';
     sim.spfRuns++;
-    document.getElementById('globalSpfCount').textContent = sim.spfRuns;
+    const spfEl = document.getElementById('globalSpfCount');
+    if (spfEl) spfEl.textContent = sim.spfRuns;
     logTestConsole(`[ INTERVENTION ] Flapped Link ${link.source} <-> ${link.target}. State = ${link.state}`);
     sim.computeAllRoutes();
     renderUI();
