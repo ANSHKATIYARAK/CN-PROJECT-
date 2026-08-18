@@ -3,397 +3,250 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Multi-Area OSPF Routing Simulator</title>
+  <title>Dynamic Multi-Area OSPF Routing Simulator</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme">
-  <!-- Top Navigation & Global Metrics -->
-  <header class="app-header">
-    <div class="logo-cluster">
-      <div class="pulse-indicator live"></div>
-      <div class="brand-text">
-        <h1>AUTONET <span>OSPF-v2 SIMULATOR</span></h1>
-        <p class="subtitle">Multi-Area Autonomous Link-State Enterprise Fabric</p>
-      </div>
-    </div>
+  <div class="app-container">
     
-    <div class="global-telemetry">
-      <div class="metric-card">
-        <span class="label">SPF RUNS</span>
-        <span class="value" id="globalSpfCount">0</span>
-      </div>
-      <div class="metric-card">
-        <span class="label">AVG CONVERGENCE</span>
-        <span class="value cyan" id="avgConvergenceTime">3.008s</span>
-      </div>
-      <div class="metric-card">
-        <span class="label">LSDB LSA COUNT</span>
-        <span class="value emerald" id="totalLsaCount">28</span>
-      </div>
-      <div class="metric-card">
-        <span class="label">TOPOLOGY STATUS</span>
-        <span class="value green-glow" id="globalTopologyStatus">STABLE (FULL)</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Grid Workspace -->
-  <main class="workspace-grid">
-    
-    <!-- LEFT PANEL: Simulation & Scenarios -->
-    <aside class="panel left-panel">
-      <div class="panel-header">
-        <h2>Control & Fault Injection</h2>
-        <span class="badge">Control Plane</span>
-      </div>
-
-      <div class="panel-content scrollable">
-        <!-- Timer Modes -->
-        <section class="control-group">
-          <label class="group-title">Link-State Timers Engine</label>
-          <div class="toggle-switch-container">
-            <button class="timer-btn" id="standardTimersBtn" onclick="setTimerProfile('standard')">
-              Standard OSPF<br><small>Hello: 10s | Dead: 40s</small>
-            </button>
-            <button class="timer-btn active" id="optimizedTimersBtn" onclick="setTimerProfile('optimized')">
-              Optimized Fast Fabric<br><small>Hello: 1s | Dead: 4s</small>
-            </button>
-          </div>
-        </section>
-
-        <!-- Dynamic Link Flap Injection -->
-        <section class="control-group">
-          <label class="group-title">Deterministic Link Failure</label>
-          <div class="select-wrapper">
-            <select id="linkFlapSelect">
-              <option value="L_C1_C2">Core-R1 &harr; Core-R2 (Backbone Transit)</option>
-              <option value="L_C1_ACAD">Core-R1 &harr; Academic-ABR (Area 10)</option>
-              <option value="L_C2_HOSTEL">Core-R2 &harr; Hostel-ABR (Area 20)</option>
-              <option value="L_C1_ADMIN">Core-R1 &harr; Admin-ABR (Area 30 Stub)</option>
-              <option value="L_C2_LABS">Core-R2 &harr; Labs-ABR (Area 40)</option>
-            </select>
-          </div>
-          <div class="btn-cluster">
-            <button class="action-btn danger" onclick="toggleSelectedLink(false)">Sever Link (Fail)</button>
-            <button class="action-btn success" onclick="toggleSelectedLink(true)">Restore Link (Heal)</button>
-          </div>
-        </section>
-
-        <!-- Traffic Simulation & Security Attack Injection -->
-        <section class="control-group">
-          <label class="group-title">Traffic & Security Probes</label>
-          <button class="action-btn primary" onclick="triggerPacketSimulation()">
-            Send Packet: Hostel-ABR &rarr; Admin VTOP
-          </button>
-          <button class="action-btn warning" onclick="injectRogueHello()">
-            Inject Spoofed OSPF Hello (Area 10 Access)
-          </button>
-        </section>
-
-        <!-- SPT Visualizer Selection -->
-        <section class="control-group">
-          <label class="group-title">Dijkstra Shortest Path Tree (SPT)</label>
-          <div class="select-wrapper">
-            <select id="sptRootSelect" onchange="visualizeSPT(this.value)">
-              <option value="Core-R1">Root: Core-R1 (10.0.0.1)</option>
-              <option value="Core-R2">Root: Core-R2 (10.0.0.2)</option>
-              <option value="Academic-ABR">Root: Academic-ABR (10.10.0.1)</option>
-              <option value="Hostel-ABR">Root: Hostel-ABR (10.20.0.1)</option>
-              <option value="Admin-ABR">Root: Admin-ABR (10.30.0.1)</option>
-              <option value="Labs-ABR">Root: Labs-ABR (10.40.0.1)</option>
-            </select>
-          </div>
-          <button class="action-btn secondary" onclick="visualizeSPT(document.getElementById('sptRootSelect').value)">
-            Calculate & Render Dijkstra Tree
-          </button>
-        </section>
-      </div>
-    </aside>
-
-    <!-- CENTER PANEL: Interactive SVG Topology Visualization -->
-    <section class="panel center-panel">
-      <div class="panel-header">
-        <h2>Enterprise Multi-Area Topology Map</h2>
-        <div class="legend-bar">
-          <span class="legend-item"><span class="color-dot backbone"></span> Area 0</span>
-          <span class="legend-item"><span class="color-dot academic"></span> Area 10</span>
-          <span class="legend-item"><span class="color-dot hostel"></span> Area 20</span>
-          <span class="legend-item"><span class="color-dot admin"></span> Area 30 (Stub)</span>
-          <span class="legend-item"><span class="color-dot labs"></span> Area 40</span>
-        </div>
-      </div>
-
-      <div class="svg-container" id="svgViewport">
-        <svg id="topologySvg" viewBox="0 0 950 620" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <!-- Link Glow Filters -->
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-            
-            <!-- Packet Marker -->
-            <radialGradient id="packetGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#00f2fe" />
-              <stop offset="100%" stop-color="#4facfe" />
-            </radialGradient>
-          </defs>
-
-          <!-- Glassmorphic Area Boundary Overlays -->
-          <g id="areaBoundaries">
-            <!-- Area 0: Core -->
-            <rect class="area-hull area-0" x="240" y="30" width="470" height="170" rx="16" />
-            <text class="area-label" x="255" y="60">AREA 0: BACKBONE CORE</text>
-
-            <!-- Area 10: Academic -->
-            <rect class="area-hull area-10" x="30" y="240" width="380" height="160" rx="16" />
-            <text class="area-label" x="45" y="265">AREA 10: ACADEMIC (SJT/TT/MB)</text>
-
-            <!-- Area 20: Hostels -->
-            <rect class="area-hull area-20" x="540" y="240" width="380" height="160" rx="16" />
-            <text class="area-label" x="555" y="265">AREA 20: RESIDENTIAL HOSTELS</text>
-
-            <!-- Area 30: Admin & DC Stub -->
-            <rect class="area-hull area-30" x="30" y="430" width="380" height="160" rx="16" />
-            <text class="area-label" x="45" y="455">AREA 30: ADMIN / VTOP (TOTALLY STUB)</text>
-
-            <!-- Area 40: High Compute / Labs -->
-            <rect class="area-hull area-40" x="540" y="430" width="380" height="160" rx="16" />
-            <text class="area-label" x="555" y="455">AREA 40: RESEARCH & IOT LABS</text>
-          </g>
-
-          <!-- Connection Physical / Logical Links -->
-          <g id="linksGroup">
-            <!-- Core to Core -->
-            <line id="L_C1_C2" class="net-link backbone-link" x1="380" y1="120" x2="570" y2="120" />
-            
-            <!-- Core-R1 Downlinks -->
-            <line id="L_C1_ACAD" class="net-link" x1="380" y1="120" x2="220" y2="320" />
-            <line id="L_C1_ADMIN" class="net-link" x1="380" y1="120" x2="220" y2="510" />
-
-            <!-- Core-R2 Downlinks -->
-            <line id="L_C2_HOSTEL" class="net-link" x1="570" y1="120" x2="730" y2="320" />
-            <line id="L_C2_LABS" class="net-link" x1="570" y1="120" x2="730" y2="510" />
-
-            <!-- Cross-Mesh Redundant Links -->
-            <line id="L_C2_ACAD" class="net-link mesh-link" x1="570" y1="120" x2="220" y2="320" />
-            <line id="L_C1_HOSTEL" class="net-link mesh-link" x1="380" y1="120" x2="730" y2="320" />
-          </g>
-
-          <!-- Animated Packet Flight Path Layer -->
-          <g id="packetSimulationLayer"></g>
-
-          <!-- Network Nodes (Routers) -->
-          <g id="nodesGroup">
-            <!-- Core-R1 -->
-            <g class="router-node active" id="node-Core-R1" transform="translate(380, 120)" onclick="selectRouter('Core-R1')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x21C4;</text>
-              <text class="node-title" y="38">Core-R1</text>
-              <text class="node-ip" y="50">10.0.0.1</text>
-            </g>
-
-            <!-- Core-R2 -->
-            <g class="router-node active" id="node-Core-R2" transform="translate(570, 120)" onclick="selectRouter('Core-R2')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x21C4;</text>
-              <text class="node-title" y="38">Core-R2</text>
-              <text class="node-ip" y="50">10.0.0.2</text>
-            </g>
-
-            <!-- Academic-ABR -->
-            <g class="router-node active" id="node-Academic-ABR" transform="translate(220, 320)" onclick="selectRouter('Academic-ABR')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x229E;</text>
-              <text class="node-title" y="38">Academic-ABR</text>
-              <text class="node-ip" y="50">10.10.0.1</text>
-            </g>
-
-            <!-- Hostel-ABR -->
-            <g class="router-node active" id="node-Hostel-ABR" transform="translate(730, 320)" onclick="selectRouter('Hostel-ABR')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x229E;</text>
-              <text class="node-title" y="38">Hostel-ABR</text>
-              <text class="node-ip" y="50">10.20.0.1</text>
-            </g>
-
-            <!-- Admin-ABR (Stub) -->
-            <g class="router-node active" id="node-Admin-ABR" transform="translate(220, 510)" onclick="selectRouter('Admin-ABR')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x229E;</text>
-              <text class="node-title" y="38">Admin-ABR [Stub]</text>
-              <text class="node-ip" y="50">10.30.0.1</text>
-            </g>
-
-            <!-- Labs-ABR -->
-            <g class="router-node active" id="node-Labs-ABR" transform="translate(730, 510)" onclick="selectRouter('Labs-ABR')">
-              <circle class="node-glow" r="28" />
-              <circle class="node-base" r="22" />
-              <text class="node-icon" dy="5">&#x229E;</text>
-              <text class="node-title" y="38">Labs-ABR</text>
-              <text class="node-ip" y="50">10.40.0.1</text>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </section>
-
-    <!-- RIGHT PANEL: Router Diagnostics, Routing Table & LSDB -->
-    <aside class="panel right-panel">
-      <div class="panel-header">
+    <!-- Top System Header -->
+    <header class="top-header">
+      <div class="logo-section">
+        <div class="logo-icon">&#x2328;</div>
         <div>
-          <h2 id="inspectedRouterName">Node: Core-R1</h2>
-          <p class="sub-heading" id="inspectedRouterRole">Role: Backbone Autonomous Core Router</p>
+          <h1>VIT-OSPF-ENTERPRISE-PROD-V1</h1>
+          <p class="subtitle">Autonomous Multi-Area Routing Framework</p>
         </div>
-        <span class="status-tag live" id="inspectedNodeState">FULL STATE</span>
       </div>
-
-      <div class="panel-content scrollable">
-        <!-- Interactive CLI Tab Bar -->
-        <div class="tab-header">
-          <button class="tab-btn active" onclick="switchDiagTab('routingTableTab')">Routing Table</button>
-          <button class="tab-btn" onclick="switchDiagTab('lsdbTab')">LSDB Database</button>
-          <button class="tab-btn" onclick="switchDiagTab('neighborsTab')">Neighbors</button>
-          <button class="tab-btn" onclick="switchDiagTab('cliTab')">Cisco CLI</button>
+      
+      <div class="status-badges">
+        <div class="badge" id="badge-convergence">
+          <span class="status-dot green"></span>
+          Convergence: <strong id="convergence-text">Sub-Second (1s/4s)</strong>
         </div>
-
-        <!-- TAB 1: IP Routing Table -->
-        <div class="tab-pane active" id="routingTableTab">
-          <table class="diag-table" id="routingTableElement">
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Prefix / Subnet</th>
-                <th>Metric</th>
-                <th>Next Hop</th>
-                <th>Interface</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Injected via app.js -->
-            </tbody>
-          </table>
+        <div class="badge" id="badge-isolation">
+          <span class="status-dot green"></span>
+          Domain Isolation: <strong id="isolation-text">Enforced</strong>
         </div>
-
-        <!-- TAB 2: OSPF Link State Database (LSDB) -->
-        <div class="tab-pane" id="lsdbTab">
-          <div class="lsdb-summary" id="lsdbContainer">
-            <!-- Dynamic LSA tree -->
-          </div>
+        <div class="badge" id="badge-auth">
+          <span class="status-dot green"></span>
+          Cryptographic Signatures: <strong>MD5 Encrypted</strong>
         </div>
+      </div>
+    </header>
 
-        <!-- TAB 3: OSPF Neighbor Adjacency -->
-        <div class="tab-pane" id="neighborsTab">
-          <table class="diag-table" id="neighborTableElement">
-            <thead>
-              <tr>
-                <th>Neighbor ID</th>
-                <th>Pri</th>
-                <th>State</th>
-                <th>Dead Time</th>
-                <th>Address</th>
-                <th>Interface</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Dynamic Neighbor States -->
-            </tbody>
-          </table>
+    <!-- Main Dashboard Grid Layout -->
+    <main class="dashboard-grid">
+      
+      <!-- Left Panel: Controls & Scenario Tuning -->
+      <section class="panel control-panel" aria-labelledby="title-control">
+        <div class="panel-header">
+          <h2 id="title-control">01 SCENARIO CONTROL CENTER</h2>
         </div>
-
-        <!-- TAB 4: Interactive Cisco IOS CLI Terminal -->
-        <div class="tab-pane" id="cliTab">
-          <div class="terminal-container">
-            <div class="terminal-output" id="terminalOutput">
-              <span class="prompt-msg">Cisco IOS Software, Multi-Area OSPF Dynamic Routing Engine.</span><br>
-              <span class="prompt-msg">Type "help", "show ip route", "show ip ospf neighbor", or "show ip ospf database"</span><br><br>
+        
+        <div class="panel-body">
+          <!-- Database Mode Toggle -->
+          <div class="control-group">
+            <label class="group-label" for="toggle-multi-area">OSPF DATABASE TOPOLOGY MODE</label>
+            <div class="toggle-box">
+              <span>Hierarchical Multi-Area</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-multi-area" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
-            <div class="terminal-input-row">
-              <span class="prompt-label" id="cliPromptLabel">Core-R1#</span>
-              <input type="text" id="cliInput" class="cli-input" placeholder="Type Cisco command..." onkeydown="handleCliInput(event)">
+            <p class="field-desc">Enables ABR boundary shields (Area 10/20/30)</p>
+          </div>
+
+          <!-- Timer Presets -->
+          <div class="control-group">
+            <label class="group-label" for="timer-preset-select">OSPF TIMER PRESETS</label>
+            <select id="timer-preset-select" class="form-control">
+              <option value="optimized" selected>Optimized Fast Convergence (Hello 1s / Dead 4s)</option>
+              <option value="standard">Standard RFC 2328 (Hello 10s / Dead 40s)</option>
+            </select>
+            <div class="timer-display">
+              <div>Hello Interval: <strong id="val-hello">1s</strong></div>
+              <div>Dead Neighbor Interval: <strong id="val-dead">4s</strong></div>
             </div>
           </div>
+
+          <!-- MD5 Auth Key -->
+          <div class="control-group">
+            <label class="group-label" for="input-md5-key">CRYPTOGRAPHIC SIGNATURE MD5 KEY</label>
+            <input type="text" id="input-md5-key" class="form-control" value="V1T_C0r3_S3cur3!">
+          </div>
+
+          <!-- Link Flapping Buttons -->
+          <div class="control-group">
+            <label class="group-label">LINK FLAP SIMULATOR</label>
+            <div class="button-grid">
+              <button class="btn btn-warning" id="btn-flap-academic">Flap Core1-Academic</button>
+              <button class="btn btn-warning" id="btn-flap-hostel">Flap Core2-Hostel</button>
+            </div>
+          </div>
+
+          <!-- Malicious LSA Injection -->
+          <div class="control-group">
+            <label class="group-label">SECURITY AUDIT & PACKET INJECTION</label>
+            <button class="btn btn-danger" id="btn-inject-malicious" style="width: 100%;">Spoof Malicious LSA (Area 0)</button>
+          </div>
         </div>
-      </div>
-    </aside>
-  </main>
+      </section>
 
-  <!-- BOTTOM PANEL: Automated Verification Test Harness -->
-  <footer class="panel bottom-panel">
-    <div class="panel-header">
-      <div class="header-left">
-        <h2>Automated Validation Harness & Benchmark Suite</h2>
-        <span class="badge">RFC 2328 Standard Verification</span>
-      </div>
-      <button class="action-btn primary" onclick="runAllTestCases()">Execute Full Test Suite (TC-01 &rarr; TC-05)</button>
-    </div>
-
-    <div class="test-harness-grid">
-      <!-- Test Case 1 -->
-      <div class="test-card" id="card-TC-OSPF-01">
-        <div class="card-top">
-          <span class="tc-id">TC-OSPF-01</span>
-          <span class="tc-status pending">PENDING</span>
+      <!-- Center Panel: Interactive SVG Topology Visualization -->
+      <section class="panel map-panel" aria-labelledby="title-map">
+        <div class="panel-header">
+          <h2 id="title-map">02 CAMPUS BACKBONE TOPOLOGY</h2>
+          <span class="map-hint">Click routers to inspect | Click links to flap</span>
         </div>
-        <div class="tc-name">Neighbor Adjacency & State Matrix</div>
-        <div class="tc-desc">Verifies all point-to-point neighbors enter FULL state without DR/BDR delay.</div>
-        <button class="btn-micro" onclick="runSingleTest('TC-OSPF-01')">Run Test</button>
-      </div>
+        
+        <div class="panel-body map-container" id="svgViewport">
+          <svg id="topology-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <!-- Link Glow Filters -->
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              
+              <!-- Packet Marker -->
+              <radialGradient id="packetGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#00f2fe" />
+                <stop offset="100%" stop-color="#4facfe" />
+              </radialGradient>
+            </defs>
 
-      <!-- Test Case 2 -->
-      <div class="test-card" id="card-TC-OSPF-02">
-        <div class="card-top">
-          <span class="tc-id">TC-OSPF-02</span>
-          <span class="tc-status pending">PENDING</span>
+            <!-- Glassmorphism Area Boundary Overlay Groups -->
+            <g id="area-zones">
+              <!-- Area 0: Core -->
+              <rect x="230" y="20" width="340" height="150" rx="20" class="area-zone area-0" />
+              <text x="240" y="45" class="area-label">Area 0 (Backbone Core)</text>
+              
+              <!-- Area 10: Academic -->
+              <rect x="30" y="210" width="220" height="260" rx="20" class="area-zone area-10" />
+              <text x="40" y="235" class="area-label">Area 10 (Academic)</text>
+              
+              <!-- Area 20: Hostels -->
+              <rect x="550" y="210" width="220" height="260" rx="20" class="area-zone area-20" />
+              <text x="560" y="235" class="area-label">Area 20 (Hostel Block)</text>
+              
+              <!-- Area 30: Admin Stub -->
+              <rect x="280" y="270" width="240" height="200" rx="20" class="area-zone area-30" />
+              <text x="290" y="295" class="area-label">Area 30 (Admin DC - Stub)</text>
+            </g>
+
+            <!-- Links Layer -->
+            <g id="svg-links"></g>
+            
+            <!-- Packet Flow Animations -->
+            <g id="svg-packets"></g>
+            
+            <!-- Router Nodes Layer -->
+            <g id="svg-nodes"></g>
+          </svg>
+
+          <!-- SVG Topology Legend Overlay -->
+          <div class="map-legend">
+            <div class="legend-item"><span class="legend-circle active"></span> Router Node (Select to configure)</div>
+            <div class="legend-item"><span class="legend-line blue"></span> P2P Core Link (10.0.0.0/30)</div>
+            <div class="legend-item"><span class="legend-line warning"></span> Flapping Link (LSA Flood active)</div>
+            <div class="legend-item"><span class="legend-line danger"></span> Down Link (Adjacency Lost)</div>
+          </div>
         </div>
-        <div class="tc-name">LSA Hierarchy & Type Shielding</div>
-        <div class="tc-desc">Validates strict containment of Type-1 LSAs and proper Type-3 generation.</div>
-        <button class="btn-micro" onclick="runSingleTest('TC-OSPF-02')">Run Test</button>
-      </div>
+      </section>
 
-      <!-- Test Case 3 -->
-      <div class="test-card" id="card-TC-OSPF-03">
-        <div class="card-top">
-          <span class="tc-id">TC-OSPF-03</span>
-          <span class="tc-status pending">PENDING</span>
+      <!-- Right Panel: Router Diagnostics & Diagnostics Tabs -->
+      <section class="panel diag-panel" aria-labelledby="title-diag">
+        <div class="panel-header">
+          <h2 id="title-diag">03 DIAGNOSTICS &amp; IOS CONFIG</h2>
+          <span class="selected-node-tag" id="selected-node-display">Core-R1 [RID: 10.0.0.1]</span>
         </div>
-        <div class="tc-name">ABR Inter-Area Route Summarization</div>
-        <div class="tc-desc">Ensures Area 10 & 20 routes aggregate to broad /16 blocks in Area 0.</div>
-        <button class="btn-micro" onclick="runSingleTest('TC-OSPF-03')">Run Test</button>
-      </div>
-
-      <!-- Test Case 4 -->
-      <div class="test-card" id="card-TC-OSPF-04">
-        <div class="card-top">
-          <span class="tc-id">TC-OSPF-04</span>
-          <span class="tc-status pending">PENDING</span>
+        
+        <div class="panel-body" style="padding: 0; background: rgba(0, 0, 0, 0.1);">
+          <div class="tab-nav">
+            <button class="tab-btn active" data-tab="tab-neighbors">NEIGHBORS</button>
+            <button class="tab-btn" data-tab="tab-routes">ROUTE TABLE</button>
+            <button class="tab-btn" data-tab="tab-lsdb">LSDB</button>
+            <button class="tab-btn" data-tab="tab-cli">CLI CONSOLE</button>
+          </div>
+          
+          <!-- Neighbors Tab -->
+          <div class="tab-content active" id="tab-neighbors" style="padding: 12px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>NEIGHBOR ID</th>
+                  <th>STATE</th>
+                  <th>INTERFACE</th>
+                  <th>IP ADDRESS</th>
+                </tr>
+              </thead>
+              <tbody id="neighbor-table-body"></tbody>
+            </table>
+          </div>
+          
+          <!-- Route Table Tab -->
+          <div class="tab-content" id="tab-routes" style="padding: 12px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>TYPE</th>
+                  <th>PREFIX</th>
+                  <th>METRIC</th>
+                  <th>NEXT HOP</th>
+                  <th>INTERFACE</th>
+                </tr>
+              </thead>
+              <tbody id="route-table-body"></tbody>
+            </table>
+          </div>
+          
+          <!-- LSDB Tab -->
+          <div class="tab-content" id="tab-lsdb" style="padding: 12px;">
+            <div id="lsdb-view-container" class="lsdb-container"></div>
+          </div>
+          
+          <!-- CLI Console Tab -->
+          <div class="tab-content" id="tab-cli" style="padding: 12px;">
+            <div class="cli-terminal">
+              <div class="cli-output" id="cli-output-log">Cisco IOS Software, C7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.3(3)M6
+Type "help" or run standard commands like "show ip ospf neighbor", "show ip route", "show ip ospf database".</div>
+              <div class="cli-input-line">
+                <span class="cli-prompt" id="cli-prompt-text">Core-R1#</span>
+                <input type="text" id="cli-input-field" class="cli-input" placeholder="Enter CLI command..." autocomplete="off" spellcheck="false">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="tc-name">Totally Stubby Area Isolation</div>
-        <div class="tc-desc">Verifies Area 30 prunes inter-area summary LSAs, substituting default route.</div>
-        <button class="btn-micro" onclick="runSingleTest('TC-OSPF-04')">Run Test</button>
-      </div>
+      </section>
 
-      <!-- Test Case 5 -->
-      <div class="test-card" id="card-TC-OSPF-05">
-        <div class="card-top">
-          <span class="tc-id">TC-OSPF-05</span>
-          <span class="tc-status pending">PENDING</span>
+      <!-- Bottom Panel: Automated Verification Test Harness -->
+      <section class="panel test-panel" aria-labelledby="title-test">
+        <div class="panel-header">
+          <h2 id="title-test">04 AUTOMATED VERIFICATION TEST HARNESS</h2>
+          <button class="btn btn-primary btn-sm" id="btn-run-all-tests">Run All Automated Verification Tests</button>
         </div>
-        <div class="tc-name">Deterministic Failover Latency</div>
-        <div class="tc-desc">Benchmarks SPF calculation speed and convergence recovery under 3.5s.</div>
-        <button class="btn-micro" onclick="runSingleTest('TC-OSPF-05')">Run Test</button>
-      </div>
-    </div>
-  </footer>
-
+        
+        <div class="panel-body test-layout">
+          <div class="test-buttons-grid">
+            <button class="btn btn-outline" id="btn-tc-1">TC-OSPF-01 (Adjacency)</button>
+            <button class="btn btn-outline" id="btn-tc-2">TC-OSPF-02 (LSDB Sync)</button>
+            <button class="btn btn-outline" id="btn-tc-3">TC-OSPF-03 (Summary Routes)</button>
+            <button class="btn btn-outline" id="btn-tc-4">TC-OSPF-04 (Stub Area)</button>
+            <button class="btn btn-outline" id="btn-tc-5">TC-OSPF-05 (Failover)</button>
+          </div>
+          
+          <div class="console-output" id="test-console-log">[ System Initialized ] Ready to execute OSPF compliance validation test harness...</div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+  
   <script src="app.js"></script>
 </body>
 </html>
