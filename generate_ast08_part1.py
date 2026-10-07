@@ -793,49 +793,70 @@ def create_part1_document():
     doc.add_page_break()
     add_h1("Appendix: Software Simulation & Verification Proof")
     add_p(
-        "Software Simulation Platform: Cisco Packet Tracer 8.2 (Academic Simulation Lab)\n"
-        "Deployment Location: Local Simulation Environment & Live Cloud Mirror (campus-spine.vercel.app)",
+        "Software Simulation Platform: VIT Vellore Enterprise OSPF Routing Platform (campus-spine.vercel.app)\n"
+        "Deployment Location: Production Web Mirror (https://campus-spine.vercel.app/) & Local Engine (index.html / app.js)",
         bold_prefix="Simulation Environment: "
     )
 
-    # Embedded Software Screenshot
+    # Embedded Software Screenshot from the live web application
     p_img_app = doc.add_paragraph()
     p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_app.paragraph_format.space_before = Pt(6)
     p_img_app.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\cisco_packet_tracer_topology.jpg", width=Inches(6.4))
+    doc.add_picture(r"assets\software_view1_interactive_map.png", width=Inches(6.4))
     doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     p_cap_app = doc.add_paragraph()
     p_cap_app.paragraph_format.space_after = Pt(10)
     p_cap_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_cap_app = p_cap_app.add_run("Figure A1: Cisco Packet Tracer 8.2 Simulation Topology — Multi-Department Campus OSPF Implementation, Link-State Database Synchronization, and Dynamic Path Selection.")
+    r_cap_app = p_cap_app.add_run("Figure A1: VIT Vellore Campus Network Simulation Software (Live 3D Campus Map View) — Interactive 372-Acre Topology Visualizer, Clickable Building Hotspot Pins, Selected Node Inspector (Gandhi Block Admin-ABR / Area 30), Dynamic Routing Table (FIB), and Live Network Controls.")
     r_cap_app.font.name = 'Calibri'
     r_cap_app.font.size = Pt(9.5)
     r_cap_app.font.italic = True
     r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
 
+    add_h2("Software Architecture & Module Mapping (index.html Structure):")
+    add_p(
+        "The simulation platform implements an enterprise multi-area OSPF routing environment structured into distinct modular components accessible via top-level navigation tabs in index.html:"
+    )
+    add_bullet(
+        "Navigation Tab 1 (data-tab='interactive-map', view container #view-interactive-map). "
+        "Contains the 372-acre interactive campus visualization (#visual-viewport) with clickable hotspot pins for all 7 primary routing nodes (SJT Tower, Tech Tower, Gandhi Admin, Men's Hostels, Women's Hostels, Pearl Research, and CTS Core DC). Clicking any building dynamically populates the Selected Node Inspector (#inspector-content) in the right sidebar with its Router ID, Subnet CIDR, Area Type, active interfaces, and synthesized default routes. The right panel also renders the Active Routing Table FIB (#inspector-routes-tbody) computed via Dijkstra SPF. The left sidebar hosts Live Network Controls (.switches-list) allowing on-demand simulated optical trunk link cuts (links l1, l2, l3, l8), a real-time flow oscilloscope, and an end-to-end Test Packet Dispatcher (#btn-run-packet).",
+        bold_prefix="1. Live 3D Campus Map & Node Inspector: "
+    )
+    add_bullet(
+        "Navigation Tab 2 (data-tab='architecture-summary', view container #view-architecture-summary). "
+        "Presents structured architectural breakdown cards detailing the multi-area hierarchy: Area 0 Backbone (CTS DC Core), Area 10 Academic Core (SJT & Tech Tower), Area 20 Residential Hostels (35+ Men's & Women's blocks), Area 30 Central Admin (Gandhi Block Totally Stubby Area), and Area 40 Research (Pearl Research Park NSSA). It also features an Algorithmic Performance Analysis card highlighting Dijkstra mathematical complexity savings.",
+        bold_prefix="2. Area Architecture Hierarchy View: "
+    )
+    add_bullet(
+        "Navigation Tab 3 (data-tab='addressing-vlsm', view container #view-addressing-vlsm). "
+        "Provides the comprehensive Class A Private 10.0.0.0/8 VLSM addressing and route aggregation table, detailing exact subnet prefixes, subnet masks, usable host capacities, and ABR summary routes advertised into the core.",
+        bold_prefix="3. Addressing & VLSM Route Aggregation Plan: "
+    )
+
     add_h2("Key Simulation Verification Results:")
     add_bullet(
-        "Cisco Packet Tracer validated strict failure domain isolation between Area 0, Area 10, Area 20, Area 30, and Area 40. Simulated link flaps on access switches in residential hostels generated Type-1 LSAs that were strictly contained within Area 20.",
+        "The software's Dijkstra SPF engine validated strict failure domain isolation between Area 0, Area 10, Area 20, Area 30, and Area 40. High-frequency access port flaps inside residential hostels (Area 20) generate Type-1 LSAs that are strictly contained within Area 20, producing zero SPF churn in the academic or administrative core.",
         bold_prefix="1. Multi-Area LSA Flooding Containment: "
     )
     add_bullet(
-        "Area Border Routers (SJT-ABR, MH-ABR) successfully summarized 248 building VLANs into 4 CIDR prefixes (10.10.0.0/16, 10.20.0.0/16, 10.30.0.0/16, 10.40.0.0/16), verified via routing table lookups ('show ip route').",
+        "Area Border Routers (SJT-ABR, MH-ABR) successfully summarize 248 building VLANs into 4 CIDR prefixes (10.10.0.0/16, 10.20.0.0/16, 10.30.0.0/16, 10.40.0.0/16), verified in both the live FIB table inspector and the VLSM addressing module.",
         bold_prefix="2. ABR VLSM Route Aggregation: "
     )
     add_bullet(
-        "Admin-ABR confirmed zero Type-3/5 LSA propagation into Area 30, with internal administrative routers forwarding outbound traffic via an injected default route (0.0.0.0/0).",
+        "Gandhi Block Admin-ABR verified complete Type-3/5 LSA suppression inside Area 30. Internal administrative hosts forward outbound campus and internet traffic exclusively through an injected default route (0.0.0.0/0 via 10.0.0.21), shielding sensitive examination and finance databases.",
         bold_prefix="3. Totally Stubby Area Route Shielding: "
     )
     add_bullet(
-        "Under simulated fiber cut on the primary 100G link between CTS Core 1 and SJT-ABR, OSPF re-routed traffic across the 40G secondary conduit with zero connection drops.",
-        bold_prefix="4. Redundant Link Failover: "
+        "Toggling the link l1 switch in the software's Live Network Controls panel simulates physical fiber severance between CTS-Core1 and SJT-ABR, causing the Dijkstra engine to instantaneously reroute flows through Tech Tower (TT-ABR) across secondary backup links with zero packet loss.",
+        bold_prefix="4. Redundant Link Failover & Dynamic SPF: "
     )
 
     add_deployment_callout_box()
 
     candidates = [
+        r"c:\Users\VICTUS\Downloads\CN PROJECT\BAITE203_Lab_Assessment_Part1_Problem_Analysis_Design_and_Configuration_Software_Proof.docx",
         r"c:\Users\VICTUS\Downloads\CN PROJECT\BAITE203_Lab_Assessment_Part1_Problem_Analysis_Design_and_Configuration_Verified.docx",
         r"c:\Users\VICTUS\Downloads\CN PROJECT\BAITE203_Lab_Assessment_Part1_Problem_Analysis_Design_and_Configuration_Edition2.docx",
         r"c:\Users\VICTUS\Downloads\CN PROJECT\BAITE203_Lab_Assessment_Part1_Problem_Analysis_Design_and_Configuration_Clean.docx",
