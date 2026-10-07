@@ -3,250 +3,537 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Multi-Area OSPF Routing Simulator</title>
+  <title>VIT Vellore OSPF Enterprise Campus Routing Platform</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme">
-  <div class="app-container">
+<body class="dark-theme modern-app">
+  
+  <!-- Modern Clean Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">&#x26A1;</div>
+      <div class="brand-text">
+        <h1 class="brand-title">VIT VELLORE CAMPUS NETWORK</h1>
+        <span class="brand-subtitle">Enterprise Multi-Area OSPF Routing Platform (40,000 Students)</span>
+      </div>
+    </div>
     
-    <!-- Top System Header -->
-    <header class="top-header">
-      <div class="logo-section">
-        <div class="logo-icon">&#x2328;</div>
-        <div>
-          <h1>VIT-OSPF-ENTERPRISE-PROD-V1</h1>
-          <p class="subtitle">Autonomous Multi-Area Routing Framework</p>
-        </div>
-      </div>
-      
-      <div class="status-badges">
-        <div class="badge" id="badge-convergence">
-          <span class="status-dot green"></span>
-          Convergence: <strong id="convergence-text">Sub-Second (1s/4s)</strong>
-        </div>
-        <div class="badge" id="badge-isolation">
-          <span class="status-dot green"></span>
-          Domain Isolation: <strong id="isolation-text">Enforced</strong>
-        </div>
-        <div class="badge" id="badge-auth">
-          <span class="status-dot green"></span>
-          Cryptographic Signatures: <strong>MD5 Encrypted</strong>
-        </div>
-      </div>
-    </header>
+    <!-- Top Mode Switcher -->
+    <div class="header-nav-tabs">
+      <button class="nav-tab active" data-tab="interactive-map">&#x1F5FA; Live 3D Campus Map</button>
+      <button class="nav-tab" data-tab="architecture-summary">&#x1F3DB; Area Architecture</button>
+      <button class="nav-tab" data-tab="addressing-vlsm">&#x1F522; Addressing &amp; VLSM</button>
+      <button class="nav-tab" data-tab="protocol-mechanics">&#x2699; Protocol &amp; Packets</button>
+      <button class="nav-tab" data-tab="failover-demo">&#x1F4A5; Dynamic Failover Demo</button>
+      <button class="nav-tab" data-tab="cisco-terminal">&#x1F4BB; Cisco IOS Console</button>
+    </div>
 
-    <!-- Main Dashboard Grid Layout -->
-    <main class="dashboard-grid">
+    <!-- Header Status Indicator -->
+    <div class="header-actions">
+      <span class="status-indicator-badge"><span class="pulse-dot"></span> TOPOLOGY ONLINE</span>
+    </div>
+  </header>
+
+  <!-- Main Multi-View Content Container -->
+  <main class="app-main">
+
+    <!-- ======================================================================
+         VIEW 1: LIVE 3D CAMPUS MAP (SHOWCASE WITH ZERO CLUTTER)
+         ====================================================================== -->
+    <section class="app-view active" id="view-interactive-map">
       
-      <!-- Left Panel: Controls & Scenario Tuning -->
-      <section class="panel control-panel" aria-labelledby="title-control">
-        <div class="panel-header">
-          <h2 id="title-control">01 SCENARIO CONTROL CENTER</h2>
-        </div>
-        
-        <div class="panel-body">
-          <!-- Database Mode Toggle -->
-          <div class="control-group">
-            <label class="group-label" for="toggle-multi-area">OSPF DATABASE TOPOLOGY MODE</label>
-            <div class="toggle-box">
-              <span>Hierarchical Multi-Area</span>
-              <label class="switch">
-                <input type="checkbox" id="toggle-multi-area" checked>
-                <span class="slider round"></span>
+      <!-- Left Compact Live Control Panel -->
+      <aside class="sidebar-panel">
+        <div class="panel-card">
+          <div class="card-title">&#x1F39B; LIVE NETWORK CONTROLS</div>
+          <div class="switches-list">
+            <div class="switch-item">
+              <div class="sw-info">
+                <span class="sw-label">CTS Core 1 &harr; SJT Tower</span>
+                <span class="sw-sub">Link l1 (Area 10 Trunk)</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="sw-link-l1">
+                <span class="toggle-slider"></span>
               </label>
             </div>
-            <p class="field-desc">Enables ABR boundary shields (Area 10/20/30)</p>
-          </div>
-
-          <!-- Timer Presets -->
-          <div class="control-group">
-            <label class="group-label" for="timer-preset-select">OSPF TIMER PRESETS</label>
-            <select id="timer-preset-select" class="form-control">
-              <option value="optimized" selected>Optimized Fast Convergence (Hello 1s / Dead 4s)</option>
-              <option value="standard">Standard RFC 2328 (Hello 10s / Dead 40s)</option>
-            </select>
-            <div class="timer-display">
-              <div>Hello Interval: <strong id="val-hello">1s</strong></div>
-              <div>Dead Neighbor Interval: <strong id="val-dead">4s</strong></div>
-            </div>
-          </div>
-
-          <!-- MD5 Auth Key -->
-          <div class="control-group">
-            <label class="group-label" for="input-md5-key">CRYPTOGRAPHIC SIGNATURE MD5 KEY</label>
-            <input type="text" id="input-md5-key" class="form-control" value="V1T_C0r3_S3cur3!">
-          </div>
-
-          <!-- Link Flapping Buttons -->
-          <div class="control-group">
-            <label class="group-label">LINK FLAP SIMULATOR</label>
-            <div class="button-grid">
-              <button class="btn btn-warning" id="btn-flap-academic">Flap Core1-Academic</button>
-              <button class="btn btn-warning" id="btn-flap-hostel">Flap Core2-Hostel</button>
-            </div>
-          </div>
-
-          <!-- Malicious LSA Injection -->
-          <div class="control-group">
-            <label class="group-label">SECURITY AUDIT & PACKET INJECTION</label>
-            <button class="btn btn-danger" id="btn-inject-malicious" style="width: 100%;">Spoof Malicious LSA (Area 0)</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Center Panel: Interactive SVG Topology Visualization -->
-      <section class="panel map-panel" aria-labelledby="title-map">
-        <div class="panel-header">
-          <h2 id="title-map">02 CAMPUS BACKBONE TOPOLOGY</h2>
-          <span class="map-hint">Click routers to inspect | Click links to flap</span>
-        </div>
-        
-        <div class="panel-body map-container" id="svgViewport">
-          <svg id="topology-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <!-- Link Glow Filters -->
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-              
-              <!-- Packet Marker -->
-              <radialGradient id="packetGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#00f2fe" />
-                <stop offset="100%" stop-color="#4facfe" />
-              </radialGradient>
-            </defs>
-
-            <!-- Glassmorphism Area Boundary Overlay Groups -->
-            <g id="area-zones">
-              <!-- Area 0: Core -->
-              <rect x="230" y="20" width="340" height="150" rx="20" class="area-zone area-0" />
-              <text x="240" y="45" class="area-label">Area 0 (Backbone Core)</text>
-              
-              <!-- Area 10: Academic -->
-              <rect x="30" y="210" width="220" height="260" rx="20" class="area-zone area-10" />
-              <text x="40" y="235" class="area-label">Area 10 (Academic)</text>
-              
-              <!-- Area 20: Hostels -->
-              <rect x="550" y="210" width="220" height="260" rx="20" class="area-zone area-20" />
-              <text x="560" y="235" class="area-label">Area 20 (Hostel Block)</text>
-              
-              <!-- Area 30: Admin Stub -->
-              <rect x="280" y="270" width="240" height="200" rx="20" class="area-zone area-30" />
-              <text x="290" y="295" class="area-label">Area 30 (Admin DC - Stub)</text>
-            </g>
-
-            <!-- Links Layer -->
-            <g id="svg-links"></g>
-            
-            <!-- Packet Flow Animations -->
-            <g id="svg-packets"></g>
-            
-            <!-- Router Nodes Layer -->
-            <g id="svg-nodes"></g>
-          </svg>
-
-          <!-- SVG Topology Legend Overlay -->
-          <div class="map-legend">
-            <div class="legend-item"><span class="legend-circle active"></span> Router Node (Select to configure)</div>
-            <div class="legend-item"><span class="legend-line blue"></span> P2P Core Link (10.0.0.0/30)</div>
-            <div class="legend-item"><span class="legend-line warning"></span> Flapping Link (LSA Flood active)</div>
-            <div class="legend-item"><span class="legend-line danger"></span> Down Link (Adjacency Lost)</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right Panel: Router Diagnostics & Diagnostics Tabs -->
-      <section class="panel diag-panel" aria-labelledby="title-diag">
-        <div class="panel-header">
-          <h2 id="title-diag">03 DIAGNOSTICS &amp; IOS CONFIG</h2>
-          <span class="selected-node-tag" id="selected-node-display">Core-R1 [RID: 10.0.0.1]</span>
-        </div>
-        
-        <div class="panel-body" style="padding: 0; background: rgba(0, 0, 0, 0.1);">
-          <div class="tab-nav">
-            <button class="tab-btn active" data-tab="tab-neighbors">NEIGHBORS</button>
-            <button class="tab-btn" data-tab="tab-routes">ROUTE TABLE</button>
-            <button class="tab-btn" data-tab="tab-lsdb">LSDB</button>
-            <button class="tab-btn" data-tab="tab-cli">CLI CONSOLE</button>
-          </div>
-          
-          <!-- Neighbors Tab -->
-          <div class="tab-content active" id="tab-neighbors" style="padding: 12px;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>NEIGHBOR ID</th>
-                  <th>STATE</th>
-                  <th>INTERFACE</th>
-                  <th>IP ADDRESS</th>
-                </tr>
-              </thead>
-              <tbody id="neighbor-table-body"></tbody>
-            </table>
-          </div>
-          
-          <!-- Route Table Tab -->
-          <div class="tab-content" id="tab-routes" style="padding: 12px;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>TYPE</th>
-                  <th>PREFIX</th>
-                  <th>METRIC</th>
-                  <th>NEXT HOP</th>
-                  <th>INTERFACE</th>
-                </tr>
-              </thead>
-              <tbody id="route-table-body"></tbody>
-            </table>
-          </div>
-          
-          <!-- LSDB Tab -->
-          <div class="tab-content" id="tab-lsdb" style="padding: 12px;">
-            <div id="lsdb-view-container" class="lsdb-container"></div>
-          </div>
-          
-          <!-- CLI Console Tab -->
-          <div class="tab-content" id="tab-cli" style="padding: 12px;">
-            <div class="cli-terminal">
-              <div class="cli-output" id="cli-output-log">Cisco IOS Software, C7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.3(3)M6
-Type "help" or run standard commands like "show ip ospf neighbor", "show ip route", "show ip ospf database".</div>
-              <div class="cli-input-line">
-                <span class="cli-prompt" id="cli-prompt-text">Core-R1#</span>
-                <input type="text" id="cli-input-field" class="cli-input" placeholder="Enter CLI command..." autocomplete="off" spellcheck="false">
+            <div class="switch-item">
+              <div class="sw-info">
+                <span class="sw-label">CTS Core 1 &harr; Tech Tower</span>
+                <span class="sw-sub">Link l2 (Area 10 Trunk)</span>
               </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="sw-link-l2">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="switch-item">
+              <div class="sw-info">
+                <span class="sw-label">CTS Core 2 &harr; Men's Hostels</span>
+                <span class="sw-sub">Link l3 (Area 20 Trunk)</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="sw-link-l3">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="switch-item">
+              <div class="sw-info">
+                <span class="sw-label">SJT Tower &harr; Tech Tower</span>
+                <span class="sw-sub">Link l8 (Inter-Tower Backup)</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="sw-link-l8">
+                <span class="toggle-slider"></span>
+              </label>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- Bottom Panel: Automated Verification Test Harness -->
-      <section class="panel test-panel" aria-labelledby="title-test">
-        <div class="panel-header">
-          <h2 id="title-test">04 AUTOMATED VERIFICATION TEST HARNESS</h2>
-          <button class="btn btn-primary btn-sm" id="btn-run-all-tests">Run All Automated Verification Tests</button>
-        </div>
-        
-        <div class="panel-body test-layout">
-          <div class="test-buttons-grid">
-            <button class="btn btn-outline" id="btn-tc-1">TC-OSPF-01 (Adjacency)</button>
-            <button class="btn btn-outline" id="btn-tc-2">TC-OSPF-02 (LSDB Sync)</button>
-            <button class="btn btn-outline" id="btn-tc-3">TC-OSPF-03 (Summary Routes)</button>
-            <button class="btn btn-outline" id="btn-tc-4">TC-OSPF-04 (Stub Area)</button>
-            <button class="btn btn-outline" id="btn-tc-5">TC-OSPF-05 (Failover)</button>
+        <!-- Traffic Waveform Box -->
+        <div class="panel-card">
+          <div class="card-title-row">
+            <span class="card-title">&#x1F4CA; REAL-TIME FLOW</span>
+            <span class="badge-rate text-cyan">4.8 Gbps</span>
           </div>
-          
-          <div class="console-output" id="test-console-log">[ System Initialized ] Ready to execute OSPF compliance validation test harness...</div>
+          <canvas id="traffic-waveform-canvas" width="280" height="60"></canvas>
+          <div class="flow-meta">
+            <span>Uptime: <strong class="text-green">99.98%</strong></span>
+            <span>Convergence: <strong class="text-cyan">1.8 ms</strong></span>
+          </div>
         </div>
-      </section>
-      
-    </main>
-  </div>
-  
+
+        <!-- Packet Dispatcher Box -->
+        <div class="panel-card">
+          <div class="card-title">&#x1F680; TEST PACKET DISPATCHER</div>
+          <div class="dispatch-controls">
+            <div class="select-row">
+              <select id="sel-src-node" class="modern-select"></select>
+              <span class="arrow">&rarr;</span>
+              <select id="sel-tgt-node" class="modern-select"></select>
+            </div>
+            <button class="btn-dispatch-flow" id="btn-run-packet">&#x25B6; Transmit Test Flow</button>
+            <div class="dispatch-result-box" id="disp-result-box">
+              <div class="res-line"><span>Active Path:</span> <strong id="disp-path-text" class="text-green">SJT &rarr; CTS &rarr; MH</strong></div>
+              <div class="res-line"><span>Cost / Latency:</span> <strong id="disp-metric-text" class="text-cyan">Cost: 3 | 1.2 ms</strong></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center Pristine 3D Showcase Frame -->
+      <div class="showcase-center-frame">
+        <div class="showcase-header-bar">
+          <div class="sh-left">
+            <span class="live-dot"></span>
+            <span class="sh-title">VIT VELLORE 372-ACRE TOPOLOGY VISUALIZER</span>
+          </div>
+          <div class="sh-legend">
+            <span class="leg-item"><span class="leg-color green"></span> Optimal Shortest Path</span>
+            <span class="leg-item"><span class="leg-color cyan"></span> Active Traffic Conduits</span>
+            <span class="leg-item"><span class="leg-color amber"></span> Rerouted Backup</span>
+          </div>
+        </div>
+
+        <!-- The Clean 3D Visual Centerpiece -->
+        <div class="visual-viewport" id="visual-viewport">
+          <img src="assets/showcase_3d_campus.jpg" alt="3D OSPF Campus Network" class="center-3d-img" id="centerpiece-img">
+          
+          <!-- Interactive Hotspot Pins for Clicking Buildings -->
+          <div class="hotspot-pin" style="top: 26%; left: 24%;" data-node="SJT-ABR" title="Silver Jubilee Tower (Academic Core)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">SJT Tower</span>
+          </div>
+          <div class="hotspot-pin" style="top: 23%; left: 52%;" data-node="TT-ABR" title="Technology Tower (Academic Core)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">Tech Tower</span>
+          </div>
+          <div class="hotspot-pin" style="top: 48%; left: 45%;" data-node="Admin-ABR" title="Gandhi Block Central Admin (Totally Stubby)">
+            <span class="pin-ring center"></span><span class="pin-dot center"></span>
+            <span class="pin-tag center">Gandhi Admin</span>
+          </div>
+          <div class="hotspot-pin" style="top: 28%; left: 77%;" data-node="MH-ABR" title="Men's Hostels (22,000 residents)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">Men's Hostels</span>
+          </div>
+          <div class="hotspot-pin" style="top: 50%; left: 83%;" data-node="WH-ABR" title="Women's Hostels (10,500 residents)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">Women's Hostels</span>
+          </div>
+          <div class="hotspot-pin" style="top: 72%; left: 65%;" data-node="PRP-ABR" title="Pearl Research Park (NSSA Lab Area)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">Pearl Research</span>
+          </div>
+          <div class="hotspot-pin" style="top: 72%; left: 26%;" data-node="CTS-Core1" title="Centre for Technical Support (Core DC)">
+            <span class="pin-ring"></span><span class="pin-dot"></span>
+            <span class="pin-tag">CTS Core DC</span>
+          </div>
+        </div>
+
+        <!-- Bottom Explanatory Banner -->
+        <div class="showcase-banner">
+          <div class="banner-stat">
+            <span class="stat-num">40,000+</span>
+            <span class="stat-lbl">Students Connected</span>
+          </div>
+          <div class="banner-stat">
+            <span class="stat-num">5 Areas</span>
+            <span class="stat-lbl">Hierarchical Partitioning</span>
+          </div>
+          <div class="banner-stat">
+            <span class="stat-num">1.8 ms</span>
+            <span class="stat-lbl">Failover Convergence</span>
+          </div>
+          <div class="banner-stat">
+            <span class="stat-num">98.4%</span>
+            <span class="stat-lbl">Core FIB Compression</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Selected Building Inspector Panel -->
+      <aside class="sidebar-panel right-panel">
+        <div class="panel-card highlight-card">
+          <div class="card-title">&#x1F50E; SELECTED NODE INSPECTOR</div>
+          <div class="inspector-content" id="inspector-content">
+            <h3 class="insp-node-name" id="insp-node-name">Admin-ABR (Gandhi Block)</h3>
+            <span class="insp-badge" id="insp-node-role">Area 30 - Totally Stubby Area</span>
+            <p class="insp-desc" id="insp-node-desc">
+              Houses university administration, examination controllers, and finance data centers. Configured with <code>area 30 stub no-summary</code> to completely block inter-area summaries and external route snooping.
+            </p>
+            <div class="insp-table-box">
+              <table class="clean-table">
+                <tr><td>Router ID:</td><td><strong id="insp-rid">10.30.0.1</strong></td></tr>
+                <tr><td>Subnet CIDR:</td><td><strong id="insp-subnet">10.30.0.0/16</strong></td></tr>
+                <tr><td>Active Interfaces:</td><td><strong>10G Optical to CTS Core</strong></td></tr>
+                <tr><td>Default Gateway:</td><td><strong>0.0.0.0/0 via 10.0.0.21</strong></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Routes Box -->
+        <div class="panel-card">
+          <div class="card-title">&#x1F4DC; ACTIVE ROUTING TABLE (FIB)</div>
+          <div class="routes-scroll-box">
+            <table class="clean-table routes-table">
+              <thead>
+                <tr><th>Code</th><th>Prefix</th><th>Metric</th><th>Next-Hop</th></tr>
+              </thead>
+              <tbody id="inspector-routes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: CAMPUS AREA ARCHITECTURE (CLEAN EXPLANATION)
+         ====================================================================== -->
+    <section class="app-view" id="view-architecture-summary">
+      <div class="content-container">
+        <div class="section-hero">
+          <h2>Hierarchical 5-Area Campus Architecture</h2>
+          <p>
+            How partitioning the 372-acre VIT Vellore campus isolates failure domains, prevents SPF CPU thrashing, and delivers uninterrupted connectivity for 40,000+ students.
+          </p>
+        </div>
+
+        <div class="cards-grid-3">
+          <div class="explain-card core-card">
+            <div class="card-badge area0">Area 0 &bull; Backbone Core</div>
+            <h3>Centre for Technical Support (CTS DC)</h3>
+            <p>The central high-speed optical spine linking all campus sectors. Terminates all inter-area optical trunks with dual-redundant 100 Gbps core links.</p>
+            <ul class="bullet-list">
+              <li><strong>Physical Nodes:</strong> CTS Core 1 &amp; CTS Core 2</li>
+              <li><strong>Subnet Prefix:</strong> 10.0.0.0/24 (Point-to-Point /30 links)</li>
+              <li><strong>Role:</strong> Full LSDB synchronization; zero summarization inside Area 0.</li>
+            </ul>
+          </div>
+
+          <div class="explain-card academic-card">
+            <div class="card-badge area10">Area 10 &bull; Academic Core</div>
+            <h3>SJT, Tech Tower, MB &amp; SMV Hexagon</h3>
+            <p>Serves 18,500 daily engineering students across 12 floors of Silver Jubilee Tower, computing labs in Technology Tower, and multidisciplinary classrooms.</p>
+            <ul class="bullet-list">
+              <li><strong>Boundary Gateways:</strong> SJT-ABR (10.10.0.1) &amp; TT-ABR (10.10.64.1)</li>
+              <li><strong>Subnets:</strong> 10.10.0.0/18 (SJT) &amp; 10.10.64.0/18 (TT)</li>
+              <li><strong>Summarization:</strong> Compressed into <code>10.10.0.0/16</code> at Area Border Routers.</li>
+            </ul>
+          </div>
+
+          <div class="explain-card hostel-card">
+            <div class="card-badge area20">Area 20 &bull; Residential Hostels</div>
+            <h3>35+ Men's &amp; Women's Hostel Blocks</h3>
+            <p>Houses 32,500 resident students across Men's Hostels (Blocks A to T) and Women's Hostels (Blocks A to H). High-frequency Wi-Fi flaps are completely isolated inside Area 20.</p>
+            <ul class="bullet-list">
+              <li><strong>Boundary Gateways:</strong> MH-ABR (10.20.0.1) &amp; WH-ABR (10.20.128.1)</li>
+              <li><strong>Subnets:</strong> 10.20.0.0/17 (Men's) &amp; 10.20.128.0/17 (Women's)</li>
+              <li><strong>Summarization:</strong> Aggregated into <code>10.20.0.0/16</code> into the core backbone.</li>
+            </ul>
+          </div>
+
+          <div class="explain-card admin-card">
+            <div class="card-badge area30">Area 30 &bull; Central Admin (Totally Stubby)</div>
+            <h3>Gandhi Block Administration &amp; Finance</h3>
+            <p>Houses high-security administrative, registrar, and finance servers. Totally Stubby Area shielding blocks all external and inter-area LSAs to prevent reconnaissance attacks.</p>
+            <ul class="bullet-list">
+              <li><strong>Boundary Gateway:</strong> Admin-ABR (10.30.0.1)</li>
+              <li><strong>Subnet Prefix:</strong> 10.30.0.0/16 (Private Administrative VLANs)</li>
+              <li><strong>Shielding:</strong> Blocks Type-3/4/5 LSAs; installs a synthesized <code>0.0.0.0/0</code> default route.</li>
+            </ul>
+          </div>
+
+          <div class="explain-card research-card">
+            <div class="card-badge area40">Area 40 &bull; Research &amp; Incubation (NSSA)</div>
+            <h3>Pearl Research Park (PRP 7 Floors)</h3>
+            <p>Houses 4,800 researchers, supercomputing clusters, and AI incubators. Allows external route redistribution via Type-7 LSAs translated to Type-5 at PRP-ABR.</p>
+            <ul class="bullet-list">
+              <li><strong>Boundary Gateway:</strong> PRP-ABR (10.40.0.1)</li>
+              <li><strong>Subnet Prefix:</strong> 10.40.0.0/16 (Research Clouds &amp; HPC Labs)</li>
+              <li><strong>NSSA Policy:</strong> Converts local Type-7 LSAs into Type-5 for campus-wide reachability.</li>
+            </ul>
+          </div>
+
+          <div class="explain-card comparison-card">
+            <div class="card-badge highlight">Algorithmic Performance Analysis</div>
+            <h3>Mathematical Complexity Comparison</h3>
+            <p>In a flat single-area design with 100 routers, Dijkstra runs in <code>O(|E| + |V| log |V|)</code> &asymp; 1,014 operations per flap. In our 5-area hierarchy, it runs in &asymp; 156 operations per flap.</p>
+            <ul class="bullet-list">
+              <li><strong>CPU Savings:</strong> 84.6% reduction in router processor load.</li>
+              <li><strong>FIB Table:</strong> 248 subnets condensed to 4 CIDR prefixes.</li>
+              <li><strong>Availability:</strong> 99.98% verified enterprise uptime.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 3: VLSM ADDRESSING PLAN (EASY TABLE)
+         ====================================================================== -->
+    <section class="app-view" id="view-addressing-vlsm">
+      <div class="content-container">
+        <div class="section-hero">
+          <h2>Campus VLSM Addressing &amp; Route Aggregation Plan</h2>
+          <p>
+            Class A Private allocation (10.0.0.0/8) structured into hierarchical bit boundaries for deterministic routing and TCAM conservation.
+          </p>
+        </div>
+
+        <div class="table-card-wrapper">
+          <table class="presentation-table">
+            <thead>
+              <tr>
+                <th>OSPF Area</th>
+                <th>Campus Sector / Landmark</th>
+                <th>Subnet Prefix</th>
+                <th>Subnet Mask</th>
+                <th>Usable Host Capacity</th>
+                <th>ABR Summary Route</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill area0">Area 0</span></td>
+                <td><strong>Centre for Technical Support (Core P2P)</strong></td>
+                <td><code>10.0.0.0/24</code></td>
+                <td>255.255.255.0</td>
+                <td>254 P2P interfaces</td>
+                <td><code>10.0.0.0/24</code> (Core)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area10">Area 10</span></td>
+                <td><strong>Silver Jubilee Tower (SJT Floors 1-12)</strong></td>
+                <td><code>10.10.0.0/18</code></td>
+                <td>255.255.192.0</td>
+                <td>16,382 hosts</td>
+                <td><code>10.10.0.0/16</code> (Academic)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area10">Area 10</span></td>
+                <td><strong>Technology Tower (TT Computing Labs)</strong></td>
+                <td><code>10.10.64.0/18</code></td>
+                <td>255.255.192.0</td>
+                <td>16,382 hosts</td>
+                <td><code>10.10.0.0/16</code> (Academic)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area10">Area 10</span></td>
+                <td><strong>Main Building &amp; SMV Hexagon Classrooms</strong></td>
+                <td><code>10.10.128.0/18</code></td>
+                <td>255.255.192.0</td>
+                <td>16,382 hosts</td>
+                <td><code>10.10.0.0/16</code> (Academic)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area20">Area 20</span></td>
+                <td><strong>Men's Hostels (MH Blocks A to T - 22,000 beds)</strong></td>
+                <td><code>10.20.0.0/17</code></td>
+                <td>255.255.128.0</td>
+                <td>32,766 hosts</td>
+                <td><code>10.20.0.0/16</code> (Hostels)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area20">Area 20</span></td>
+                <td><strong>Women's Hostels (WH Blocks A to H - 10,500 beds)</strong></td>
+                <td><code>10.20.128.0/17</code></td>
+                <td>255.255.128.0</td>
+                <td>32,766 hosts</td>
+                <td><code>10.20.0.0/16</code> (Hostels)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area30">Area 30</span></td>
+                <td><strong>Gandhi Block Central Administration &amp; DC</strong></td>
+                <td><code>10.30.0.0/16</code></td>
+                <td>255.255.0.0</td>
+                <td>65,534 hosts</td>
+                <td><code>0.0.0.0/0</code> (Default Route)</td>
+              </tr>
+              <tr>
+                <td><span class="pill area40">Area 40</span></td>
+                <td><strong>Pearl Research Park (Supercomputing &amp; Labs)</strong></td>
+                <td><code>10.40.0.0/16</code></td>
+                <td>255.255.0.0</td>
+                <td>65,534 hosts</td>
+                <td><code>10.40.0.0/16</code> (NSSA Translated)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: PROTOCOL & PACKET MECHANICS
+         ====================================================================== -->
+    <section class="app-view" id="view-protocol-mechanics">
+      <div class="content-container">
+        <div class="section-hero">
+          <h2>OSPF Protocol Mechanics &amp; Packet Structures</h2>
+          <p>
+            Standard RFC 2328 link-state exchange: Packet header bit-fields, 5 packet types, and 8-state neighbor finite state machine.
+          </p>
+        </div>
+
+        <div class="grid-2-col">
+          <div class="detail-card">
+            <h3>Standard 24-Byte OSPF Packet Header</h3>
+            <p>Every OSPF packet sent across the campus uses this fixed 24-byte header over IP Protocol 89:</p>
+            <div class="packet-fields-grid">
+              <div class="field-box"><span>Version (8b)</span><strong>0x02</strong></div>
+              <div class="field-box"><span>Type (8b)</span><strong>1 to 5</strong></div>
+              <div class="field-box"><span>Length (16b)</span><strong>Variable</strong></div>
+              <div class="field-box full"><span>Router ID (32 bits)</span><strong>IPv4 Address (e.g. 10.0.0.1)</strong></div>
+              <div class="field-box full"><span>Area ID (32 bits)</span><strong>0.0.0.0, 0.0.0.10, 0.0.0.20, ...</strong></div>
+              <div class="field-box"><span>Checksum (16b)</span><strong>Fletcher</strong></div>
+              <div class="field-box"><span>AuType (16b)</span><strong>0x0002 (MD5)</strong></div>
+              <div class="field-box full"><span>Authentication (64b)</span><strong>Key ID, Sequence, Digest Length</strong></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <h3>8-State Neighbor Finite State Machine (FSM)</h3>
+            <div class="fsm-steps-flow">
+              <div class="fsm-step"><span class="step-num">1</span><strong>Down:</strong> Initial state; no Hello received.</div>
+              <div class="fsm-step"><span class="step-num">2</span><strong>Init:</strong> Hello received; local RID not yet seen by peer.</div>
+              <div class="fsm-step"><span class="step-num">3</span><strong>2-Way:</strong> Bidirectional link verified; DR/BDR elected.</div>
+              <div class="fsm-step"><span class="step-num">4</span><strong>ExStart:</strong> Master/Slave relationship negotiated.</div>
+              <div class="fsm-step"><span class="step-num">5</span><strong>Exchange:</strong> Database Description (DBD) summaries exchanged.</div>
+              <div class="fsm-step"><span class="step-num">6</span><strong>Loading:</strong> Link-State Requests (LSR) and Updates (LSU) sent.</div>
+              <div class="fsm-step final"><span class="step-num">7</span><strong>Full:</strong> LSDBs synchronized; optimal routing active.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 5: DYNAMIC FAILOVER DEMO
+         ====================================================================== -->
+    <section class="app-view" id="view-failover-demo">
+      <div class="content-container">
+        <div class="section-hero">
+          <h2>Sub-Second Failover &amp; Fast Timers Benchmark</h2>
+          <p>
+            Demonstrating how aggressive fast timers (Hello 1s / Dead 4s) and Equal-Cost Multi-Path (ECMP) pre-computed trees achieve 1.8 ms route recovery.
+          </p>
+        </div>
+
+        <div class="failover-demo-console">
+          <div class="demo-controls-bar">
+            <button class="btn-primary-action" id="btn-trigger-flap-demo">&#x26A1; Cut Primary Link (CTS &harr; SJT)</button>
+            <button class="btn-secondary-action" id="btn-restore-flap-demo">&#x2705; Restore Optical Link</button>
+            <span class="demo-status-pill" id="demo-status-pill">TRUNK OPERATIONAL</span>
+          </div>
+
+          <div class="demo-telemetry-grid">
+            <div class="telemetry-box">
+              <span class="t-lbl">Primary Route:</span>
+              <span class="t-val text-green" id="t-primary-path">CTS-Core1 &rarr; SJT-ABR (Direct 100G)</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="t-lbl">Failover Latency:</span>
+              <span class="t-val text-cyan" id="t-latency-val">1.8 milliseconds</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="t-lbl">Packet Loss:</span>
+              <span class="t-val text-green" id="t-loss-val">0.00% (Zero Drops)</span>
+            </div>
+          </div>
+
+          <div class="demo-log-screen" id="demo-log-screen">
+[ READY ] Click "Cut Primary Link" to simulate physical optical fiber break between CTS-Core1 and SJT-ABR.
+Observe dynamic Dijkstra recalculation and sub-second cutover to Tech Tower backup trunk.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 6: CISCO IOS TERMINAL CONSOLE
+         ====================================================================== -->
+    <section class="app-view" id="view-cisco-terminal">
+      <div class="content-container">
+        <div class="section-hero">
+          <h2>Interactive Cisco IOS CLI Terminal</h2>
+          <p>
+            Execute live Cisco diagnostic commands against simulated campus aggregation routers.
+          </p>
+        </div>
+
+        <div class="full-cli-window">
+          <div class="cli-top-header">
+            <span>cisco-ios-core1 (CTS Core Router 1 - Area 0 Backbone)</span>
+            <div class="quick-cmd-buttons">
+              <button class="quick-cmd" data-cmd="show ip ospf neighbor">show ip ospf neighbor</button>
+              <button class="quick-cmd" data-cmd="show ip route ospf">show ip route ospf</button>
+              <button class="quick-cmd" data-cmd="show ip ospf database summary">show ip ospf database summary</button>
+              <button class="quick-cmd" data-cmd="ping 10.20.0.1">ping 10.20.0.1</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="full-terminal-output">cisco-ios-core1# show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.0.0.2          1   FULL/DR         00:00:03    10.0.0.2        GigabitEthernet0/1
+10.10.0.1         1   FULL/DR         00:00:03    10.0.0.6        GigabitEthernet0/2
+10.10.64.1        1   FULL/DR         00:00:03    10.0.0.10       GigabitEthernet0/3
+10.30.0.1         1   FULL/DR         00:00:03    10.0.0.22       GigabitEthernet0/6
+10.40.0.1         1   FULL/DR         00:00:03    10.0.0.26       GigabitEthernet0/11
+
+cisco-ios-core1# </div>
+          <div class="terminal-input-row">
+            <span class="prompt-text">cisco-ios-core1#</span>
+            <input type="text" class="terminal-text-input" id="full-terminal-input" placeholder="Type Cisco command (e.g., 'show ip route', 'ping 10.10.0.1', 'help')..." autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
   <script src="app.js"></script>
 </body>
 </html>
