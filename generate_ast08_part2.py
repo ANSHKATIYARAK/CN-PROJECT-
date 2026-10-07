@@ -40,11 +40,13 @@ def create_part2_document():
         r.font.color.rgb = RGBColor(100, 116, 139)
         return p
 
-    def add_h1(text):
+    def add_h1(text, page_break_before=False):
         p = doc.add_paragraph()
         p.paragraph_format.space_before = Pt(16)
         p.paragraph_format.space_after = Pt(4)
         p.paragraph_format.keep_with_next = True
+        if page_break_before:
+            p.paragraph_format.page_break_before = True
         r = p.add_run(text)
         r.font.name = 'Arial'
         r.font.size = Pt(14)
@@ -112,9 +114,6 @@ def create_part2_document():
         tbl = doc.add_table(rows=1, cols=1)
         tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
         tbl.autofit = False
-        
-        trPr = tbl.rows[0]._tr.get_or_add_trPr()
-        trPr.append(parse_xml(f'<w:cantSplit {nsdecls("w")}/>'))
 
         cell = tbl.cell(0, 0)
         cell.width = Inches(6.8)
@@ -293,33 +292,40 @@ def create_part2_document():
     # ==========================================
     # COVER & PROJECT METADATA HEADER
     # ==========================================
+    p_logo = doc.add_paragraph()
+    p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_logo.paragraph_format.space_before = Pt(0)
+    p_logo.paragraph_format.space_after = Pt(4)
+    r_logo = p_logo.add_run()
+    r_logo.add_picture(r"assets\vit_logo.png", width=Inches(1.15))
+
     add_title("VELLORE INSTITUTE OF TECHNOLOGY")
     add_subtitle("School of Computer Science Engineering and Information Systems\nFall Semester 2026–2027 | Course: BAITE203 - Computer Networks and Data Communications Lab\nFaculty In-Charge: Dr. G. Usha Devi")
 
     p_proj = doc.add_paragraph()
-    p_proj.paragraph_format.space_before = Pt(14)
+    p_proj.paragraph_format.space_before = Pt(8)
     p_proj.paragraph_format.space_after = Pt(2)
     p_proj.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_proj = p_proj.add_run("ENTERPRISE ROUTING USING OSPF:\nLINK-STATE IMPLEMENTATION & CONVERGENCE ANALYSIS")
     r_proj.font.name = 'Arial'
-    r_proj.font.size = Pt(15)
+    r_proj.font.size = Pt(14)
     r_proj.font.bold = True
     r_proj.font.color.rgb = RGBColor(0, 51, 102)
 
     p_rev = doc.add_paragraph()
     p_rev.paragraph_format.space_before = Pt(0)
-    p_rev.paragraph_format.space_after = Pt(16)
+    p_rev.paragraph_format.space_after = Pt(10)
     p_rev.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_rev = p_rev.add_run("Lab Assessment Review 2: Implementation & Performance Evaluation")
     r_rev.font.name = 'Arial'
-    r_rev.font.size = Pt(12)
+    r_rev.font.size = Pt(11)
     r_rev.font.bold = True
     r_rev.font.color.rgb = RGBColor(0, 102, 153)
 
     # Student Team Members Table
     p_team_hdr = doc.add_paragraph()
-    p_team_hdr.paragraph_format.space_before = Pt(10)
-    p_team_hdr.paragraph_format.space_after = Pt(4)
+    p_team_hdr.paragraph_format.space_before = Pt(6)
+    p_team_hdr.paragraph_format.space_after = Pt(3)
     r_th = p_team_hdr.add_run("STUDENT PROJECT CANDIDATES")
     r_th.font.name = 'Arial'
     r_th.font.size = Pt(10)
@@ -385,8 +391,8 @@ def create_part2_document():
     p_img_mini.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_mini.paragraph_format.space_before = Pt(8)
     p_img_mini.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\mininet_campus_emulation.jpg", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_mini = p_img_mini.add_run()
+    r_img_mini.add_picture(r"assets\mininet_campus_emulation.jpg", width=Inches(5.8))
 
     p_cap_mini = doc.add_paragraph()
     p_cap_mini.paragraph_format.space_after = Pt(10)
@@ -419,8 +425,8 @@ def create_part2_document():
     p_img_wire.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_wire.paragraph_format.space_before = Pt(8)
     p_img_wire.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\wireshark_ospf_packet_capture.jpg", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_wire = p_img_wire.add_run()
+    r_img_wire.add_picture(r"assets\wireshark_ospf_packet_capture.jpg", width=Inches(5.8))
 
     p_cap_wire = doc.add_paragraph()
     p_cap_wire.paragraph_format.space_after = Pt(12)
@@ -590,8 +596,8 @@ def create_part2_document():
     p_img_fail.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_fail.paragraph_format.space_before = Pt(8)
     p_img_fail.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"figures\failover_convergence_graph.png", width=Inches(6.2))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_fail = p_img_fail.add_run()
+    r_img_fail.add_picture(r"figures\failover_convergence_graph.png", width=Inches(5.8))
 
     p_cap_fail = doc.add_paragraph()
     p_cap_fail.paragraph_format.space_after = Pt(12)
@@ -637,8 +643,7 @@ def create_part2_document():
     # ==========================================
     # APPENDIX: SOFTWARE SIMULATION & VERIFICATION PROOF
     # ==========================================
-    doc.add_page_break()
-    add_h1("Appendix: Software Simulation & Verification Proof")
+    add_h1("Appendix: Software Simulation & Verification Proof", page_break_before=True)
     add_p(
         "Software Simulation Platform: VIT Vellore Enterprise OSPF Routing Platform (campus-spine.vercel.app)\n"
         "Deployment Location: Production Web Mirror (https://campus-spine.vercel.app/) & Failover Telemetry Engine (index.html / app.js)",
@@ -650,7 +655,8 @@ def create_part2_document():
     p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_app.paragraph_format.space_before = Pt(6)
     p_img_app.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\software_view5_failover_demo.png", width=Inches(6.4))
+    r_img_app = p_img_app.add_run()
+    r_img_app.add_picture(r"assets\software_view5_failover_demo.png", width=Inches(5.6))
     doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     p_cap_app = doc.add_paragraph()
@@ -662,24 +668,21 @@ def create_part2_document():
     r_cap_app.font.italic = True
     r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
 
-    add_h2("Software Architecture & Module Mapping (index.html Structure):")
+    add_h2("Software Architecture & Interface Module Guide:")
     add_p(
-        "The software platform provides comprehensive protocol performance evaluation and live failure testing across distinct views defined in index.html:"
+        "The software platform provides comprehensive protocol performance evaluation and live failure testing across dedicated modules accessible via the top navigation bar:"
     )
     add_bullet(
-        "Navigation Tab 5 (data-tab='failover-demo', view container #view-failover-demo). "
-        "Contains the Sub-Second Failover & Fast Timers Benchmark console. The top control bar (.demo-controls-bar) features interactive trigger buttons: '#btn-trigger-flap-demo' (Cut Primary Link CTS ↔ SJT) and '#btn-restore-flap-demo' (Restore Optical Link), paired with a live status badge (#demo-status-pill) transitioning between 'TRUNK OPERATIONAL' and 'OPTICAL TRUNK CUT - REROUTED'. The telemetry dashboard (.demo-telemetry-grid) continuously reports active dynamic pathing ('SJT-ABR → TT-ABR → CTS-Core1 Inter-Tower Backup'), failover latency (1.8 milliseconds), and packet loss (0.00%). Below the telemetry cards, the live event screen (#demo-log-screen) displays real-time timestamped Cisco IOS syslog messages (%LINK-3-UPDOWN, %OSPF-5-ADJCHG, %OSPF-5-SPF partial recalculation in 0.42 ms, and %CEF-4-FAILOVER).",
-        bold_prefix="1. Dynamic Failover Demo Console: "
+        "Located under the 'Dynamic Failover Demo' tab. Features interactive control buttons ('Cut Primary Link' and 'Restore Optical Link') accompanied by a real-time trunk operational status badge. The telemetry dashboard reports instantaneous dynamic rerouting across the Tech Tower backup path, verified sub-second convergence latency (1.8 ms), and zero packet loss (0.00%). A live Cisco IOS Syslog event console streams real-time state changes, interface down notifications, partial SPF recalculation timings (0.42 ms), and CEF fast reroute cutover logs.",
+        bold_prefix="1. Dynamic Failover Demonstration Console: "
     )
     add_bullet(
-        "Navigation Tab 4 (data-tab='protocol-mechanics', view container #view-protocol-mechanics). "
-        "Details standard RFC 2328 link-state exchanges. It renders the complete 24-byte OSPF packet header grid (.packet-fields-grid) displaying Version (0x02), Type (1 to 5), Length, Router ID, Area ID, Checksum, AuType (MD5), and Authentication credentials. It also presents the 8-state neighbor finite state machine sequence (.fsm-steps-flow) illustrating transition phases from Down to Full.",
-        bold_prefix="2. Protocol & Packet Mechanics View: "
+        "Located under the 'Protocol & Packets' tab. Details standard RFC 2328 link-state exchange mechanisms. Includes a bit-level architectural breakdown of the fixed 24-byte OSPF packet header (Version 2, Type 1-5, Router ID, Area ID, Checksum, AuType MD5, and Authentication fields) and tracks the 8-state neighbor finite state machine sequence from Down to Full.",
+        bold_prefix="2. Protocol Mechanics & Packet Header Inspection: "
     )
     add_bullet(
-        "Located in Left Sidebar of Tab 1 (#view-interactive-map). "
-        "Allows arbitrary selection of source and destination campus routers (#sel-src-node, #sel-tgt-node) to dispatch test packets (#btn-run-packet). The engine computes hop-by-hop Dijkstra cost, latency, and pulses the active path across the 3D map visualizer.",
-        bold_prefix="3. Test Packet Dispatcher & Flow Engine: "
+        "Located in the left sidebar of the 3D campus map view. Allows selecting any source and destination campus routers to dispatch simulated packet flows, validating shortest path calculations and measuring transit hops and propagation delay across the multi-area topology.",
+        bold_prefix="3. Test Packet Dispatcher & Latency Simulator: "
     )
 
     add_h2("Key Simulation Verification Results:")

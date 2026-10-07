@@ -40,11 +40,13 @@ def create_part1_document():
         r.font.color.rgb = RGBColor(100, 116, 139)
         return p
 
-    def add_h1(text):
+    def add_h1(text, page_break_before=False):
         p = doc.add_paragraph()
         p.paragraph_format.space_before = Pt(16)
         p.paragraph_format.space_after = Pt(4)
         p.paragraph_format.keep_with_next = True
+        if page_break_before:
+            p.paragraph_format.page_break_before = True
         r = p.add_run(text)
         r.font.name = 'Arial'
         r.font.size = Pt(14)
@@ -112,9 +114,6 @@ def create_part1_document():
         tbl = doc.add_table(rows=1, cols=1)
         tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
         tbl.autofit = False
-        
-        trPr = tbl.rows[0]._tr.get_or_add_trPr()
-        trPr.append(parse_xml(f'<w:cantSplit {nsdecls("w")}/>'))
 
         cell = tbl.cell(0, 0)
         cell.width = Inches(6.8)
@@ -293,33 +292,40 @@ def create_part1_document():
     # ==========================================
     # COVER & PROJECT METADATA HEADER
     # ==========================================
+    p_logo = doc.add_paragraph()
+    p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_logo.paragraph_format.space_before = Pt(0)
+    p_logo.paragraph_format.space_after = Pt(4)
+    r_logo = p_logo.add_run()
+    r_logo.add_picture(r"assets\vit_logo.png", width=Inches(1.15))
+
     add_title("VELLORE INSTITUTE OF TECHNOLOGY")
     add_subtitle("School of Computer Science Engineering and Information Systems\nFall Semester 2026–2027 | Course: BAITE203 - Computer Networks and Data Communications Lab\nFaculty In-Charge: Dr. G. Usha Devi")
 
     p_proj = doc.add_paragraph()
-    p_proj.paragraph_format.space_before = Pt(14)
+    p_proj.paragraph_format.space_before = Pt(8)
     p_proj.paragraph_format.space_after = Pt(2)
     p_proj.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_proj = p_proj.add_run("ENTERPRISE ROUTING USING OSPF:\nSCALABLE MULTI-DEPARTMENT CAMPUS NETWORK DESIGN")
     r_proj.font.name = 'Arial'
-    r_proj.font.size = Pt(15)
+    r_proj.font.size = Pt(14)
     r_proj.font.bold = True
     r_proj.font.color.rgb = RGBColor(0, 51, 102)
 
     p_rev = doc.add_paragraph()
     p_rev.paragraph_format.space_before = Pt(0)
-    p_rev.paragraph_format.space_after = Pt(16)
+    p_rev.paragraph_format.space_after = Pt(10)
     p_rev.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_rev = p_rev.add_run("Lab Assessment Review 1: Problem Analysis, Network Design & Configuration")
     r_rev.font.name = 'Arial'
-    r_rev.font.size = Pt(12)
+    r_rev.font.size = Pt(11)
     r_rev.font.bold = True
     r_rev.font.color.rgb = RGBColor(0, 102, 153)
 
     # Student Team Members Table
     p_team_hdr = doc.add_paragraph()
-    p_team_hdr.paragraph_format.space_before = Pt(10)
-    p_team_hdr.paragraph_format.space_after = Pt(4)
+    p_team_hdr.paragraph_format.space_before = Pt(6)
+    p_team_hdr.paragraph_format.space_after = Pt(3)
     r_th = p_team_hdr.add_run("STUDENT PROJECT CANDIDATES")
     r_th.font.name = 'Arial'
     r_th.font.size = Pt(10)
@@ -476,8 +482,8 @@ def create_part1_document():
     p_img1.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img1.paragraph_format.space_before = Pt(8)
     p_img1.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\cisco_packet_tracer_topology.jpg", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img1 = p_img1.add_run()
+    r_img1.add_picture(r"assets\cisco_packet_tracer_topology.jpg", width=Inches(5.8))
 
     p_cap1 = doc.add_paragraph()
     p_cap1.paragraph_format.space_after = Pt(10)
@@ -493,8 +499,8 @@ def create_part1_document():
     p_img2.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img2.paragraph_format.space_before = Pt(6)
     p_img2.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\showcase_3d_campus.jpg", width=Inches(6.0))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img2 = p_img2.add_run()
+    r_img2.add_picture(r"assets\showcase_3d_campus.jpg", width=Inches(5.6))
 
     p_cap2 = doc.add_paragraph()
     p_cap2.paragraph_format.space_after = Pt(12)
@@ -510,8 +516,8 @@ def create_part1_document():
     p_img3.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img3.paragraph_format.space_before = Pt(8)
     p_img3.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"figures\vit_ospf_5area_schematic.png", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img3 = p_img3.add_run()
+    r_img3.add_picture(r"figures\vit_ospf_5area_schematic.png", width=Inches(5.8))
 
     p_cap3 = doc.add_paragraph()
     p_cap3.paragraph_format.space_after = Pt(12)
@@ -608,8 +614,7 @@ def create_part1_document():
     # ==========================================
     # SECTION 4: CISCO CONFIGURATION SCRIPTS
     # ==========================================
-    doc.add_page_break()
-    add_h1("4. Production Cisco IOS Configuration Scripts")
+    add_h1("4. Production Cisco IOS Configuration Scripts", page_break_before=True)
     add_p(
         "The following production-grade Cisco IOS command scripts were configured and validated across all campus routers. "
         "Configurations include reference bandwidth tuning, fast timers, cryptographic authentication, and stub boundary enforcement."
@@ -790,8 +795,7 @@ def create_part1_document():
     # ==========================================
     # APPENDIX: SOFTWARE SIMULATION & VERIFICATION PROOF
     # ==========================================
-    doc.add_page_break()
-    add_h1("Appendix: Software Simulation & Verification Proof")
+    add_h1("Appendix: Software Simulation & Verification Proof", page_break_before=True)
     add_p(
         "Software Simulation Platform: VIT Vellore Enterprise OSPF Routing Platform (campus-spine.vercel.app)\n"
         "Deployment Location: Production Web Mirror (https://campus-spine.vercel.app/) & Local Engine (index.html / app.js)",
@@ -803,8 +807,8 @@ def create_part1_document():
     p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_app.paragraph_format.space_before = Pt(6)
     p_img_app.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\software_view1_interactive_map.png", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_app = p_img_app.add_run()
+    r_img_app.add_picture(r"assets\software_view1_interactive_map.png", width=Inches(5.6))
 
     p_cap_app = doc.add_paragraph()
     p_cap_app.paragraph_format.space_after = Pt(10)
@@ -815,24 +819,25 @@ def create_part1_document():
     r_cap_app.font.italic = True
     r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
 
-    add_h2("Software Architecture & Module Mapping (index.html Structure):")
+    add_h2("Software Architecture & Interface Module Guide:")
     add_p(
-        "The simulation platform implements an enterprise multi-area OSPF routing environment structured into distinct modular components accessible via top-level navigation tabs in index.html:"
+        "The simulation platform implements an enterprise multi-area OSPF routing environment structured into distinct functional modules accessible via the top navigation bar:"
     )
     add_bullet(
-        "Navigation Tab 1 (data-tab='interactive-map', view container #view-interactive-map). "
-        "Contains the 372-acre interactive campus visualization (#visual-viewport) with clickable hotspot pins for all 7 primary routing nodes (SJT Tower, Tech Tower, Gandhi Admin, Men's Hostels, Women's Hostels, Pearl Research, and CTS Core DC). Clicking any building dynamically populates the Selected Node Inspector (#inspector-content) in the right sidebar with its Router ID, Subnet CIDR, Area Type, active interfaces, and synthesized default routes. The right panel also renders the Active Routing Table FIB (#inspector-routes-tbody) computed via Dijkstra SPF. The left sidebar hosts Live Network Controls (.switches-list) allowing on-demand simulated optical trunk link cuts (links l1, l2, l3, l8), a real-time flow oscilloscope, and an end-to-end Test Packet Dispatcher (#btn-run-packet).",
-        bold_prefix="1. Live 3D Campus Map & Node Inspector: "
+        "Located under the 'Live 3D Campus Map' tab. Displays the full 372-acre campus isometric visualizer with clickable hotspot pins for all 7 primary routing gateways (Silver Jubilee Tower, Technology Tower, Gandhi Admin, Men's Hostels, Women's Hostels, Pearl Research Park, and CTS Core DC). Selecting any building dynamically loads its Router ID, Subnet CIDR, Area Type, active interfaces, and default gateway into the Selected Node Inspector (right sidebar), while rendering its real-time Forwarding Information Base (FIB) routing table computed via Dijkstra SPF.",
+        bold_prefix="1. Interactive 3D Topology & Node Inspector: "
     )
     add_bullet(
-        "Navigation Tab 2 (data-tab='architecture-summary', view container #view-architecture-summary). "
-        "Presents structured architectural breakdown cards detailing the multi-area hierarchy: Area 0 Backbone (CTS DC Core), Area 10 Academic Core (SJT & Tech Tower), Area 20 Residential Hostels (35+ Men's & Women's blocks), Area 30 Central Admin (Gandhi Block Totally Stubby Area), and Area 40 Research (Pearl Research Park NSSA). It also features an Algorithmic Performance Analysis card highlighting Dijkstra mathematical complexity savings.",
-        bold_prefix="2. Area Architecture Hierarchy View: "
+        "Located in the left sidebar of the campus map view. Provides dynamic toggle switches to simulate optical trunk breaks (CTS to SJT, CTS to Tech Tower, CTS to Hostels, and Inter-Tower Backup). Also integrates a real-time 4.8 Gbps traffic flow oscilloscope and an end-to-end Test Packet Dispatcher with path trace animations, latency readouts, and hop metric calculations.",
+        bold_prefix="2. Live Network Controls & Flow Dispatcher: "
     )
     add_bullet(
-        "Navigation Tab 3 (data-tab='addressing-vlsm', view container #view-addressing-vlsm). "
-        "Provides the comprehensive Class A Private 10.0.0.0/8 VLSM addressing and route aggregation table, detailing exact subnet prefixes, subnet masks, usable host capacities, and ABR summary routes advertised into the core.",
-        bold_prefix="3. Addressing & VLSM Route Aggregation Plan: "
+        "Located under the 'Area Architecture' tab. Features structured engineering breakdown cards detailing failure domain boundaries across Area 0 (Backbone Core), Area 10 (Academic Core), Area 20 (Residential Hostels), Area 30 (Totally Stubby Admin), and Area 40 (Research NSSA), alongside mathematical Dijkstra complexity comparative benchmarks.",
+        bold_prefix="3. Area Architecture & Failure Domain Isolation: "
+    )
+    add_bullet(
+        "Located under the 'Addressing & VLSM' tab. Presents the university-wide Class A Private 10.0.0.0/8 VLSM addressing plan, displaying exact subnet masks, usable host capacities, and ABR summary aggregation prefixes.",
+        bold_prefix="4. Campus VLSM Addressing & Route Aggregation Table: "
     )
 
     add_h2("Key Simulation Verification Results:")

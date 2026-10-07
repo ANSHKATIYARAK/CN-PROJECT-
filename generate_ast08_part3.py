@@ -40,11 +40,13 @@ def create_part3_document():
         r.font.color.rgb = RGBColor(100, 116, 139)
         return p
 
-    def add_h1(text):
+    def add_h1(text, page_break_before=False):
         p = doc.add_paragraph()
         p.paragraph_format.space_before = Pt(16)
         p.paragraph_format.space_after = Pt(4)
         p.paragraph_format.keep_with_next = True
+        if page_break_before:
+            p.paragraph_format.page_break_before = True
         r = p.add_run(text)
         r.font.name = 'Arial'
         r.font.size = Pt(14)
@@ -112,9 +114,6 @@ def create_part3_document():
         tbl = doc.add_table(rows=1, cols=1)
         tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
         tbl.autofit = False
-        
-        trPr = tbl.rows[0]._tr.get_or_add_trPr()
-        trPr.append(parse_xml(f'<w:cantSplit {nsdecls("w")}/>'))
 
         cell = tbl.cell(0, 0)
         cell.width = Inches(6.8)
@@ -293,33 +292,40 @@ def create_part3_document():
     # ==========================================
     # COVER & PROJECT METADATA HEADER
     # ==========================================
+    p_logo = doc.add_paragraph()
+    p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_logo.paragraph_format.space_before = Pt(0)
+    p_logo.paragraph_format.space_after = Pt(4)
+    r_logo = p_logo.add_run()
+    r_logo.add_picture(r"assets\vit_logo.png", width=Inches(1.15))
+
     add_title("VELLORE INSTITUTE OF TECHNOLOGY")
     add_subtitle("School of Computer Science Engineering and Information Systems\nFall Semester 2026–2027 | Course: BAITE203 - Computer Networks and Data Communications Lab\nFaculty In-Charge: Dr. G. Usha Devi")
 
     p_proj = doc.add_paragraph()
-    p_proj.paragraph_format.space_before = Pt(14)
+    p_proj.paragraph_format.space_before = Pt(8)
     p_proj.paragraph_format.space_after = Pt(2)
     p_proj.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_proj = p_proj.add_run("ENTERPRISE ROUTING USING OSPF:\nINNOVATION, TCAM OPTIMIZATION & PERFORMANCE FINDINGS")
     r_proj.font.name = 'Arial'
-    r_proj.font.size = Pt(15)
+    r_proj.font.size = Pt(14)
     r_proj.font.bold = True
     r_proj.font.color.rgb = RGBColor(0, 51, 102)
 
     p_rev = doc.add_paragraph()
     p_rev.paragraph_format.space_before = Pt(0)
-    p_rev.paragraph_format.space_after = Pt(16)
+    p_rev.paragraph_format.space_after = Pt(10)
     p_rev.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_rev = p_rev.add_run("Lab Assessment Review 3: Presentation and Report on Innovation & Optimization")
     r_rev.font.name = 'Arial'
-    r_rev.font.size = Pt(12)
+    r_rev.font.size = Pt(11)
     r_rev.font.bold = True
     r_rev.font.color.rgb = RGBColor(0, 102, 153)
 
     # Student Team Members Table
     p_team_hdr = doc.add_paragraph()
-    p_team_hdr.paragraph_format.space_before = Pt(10)
-    p_team_hdr.paragraph_format.space_after = Pt(4)
+    p_team_hdr.paragraph_format.space_before = Pt(6)
+    p_team_hdr.paragraph_format.space_after = Pt(3)
     r_th = p_team_hdr.add_run("STUDENT PROJECT CANDIDATES")
     r_th.font.name = 'Arial'
     r_th.font.size = Pt(10)
@@ -442,8 +448,8 @@ def create_part3_document():
     p_img_dijk.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_dijk.paragraph_format.space_before = Pt(8)
     p_img_dijk.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"figures\dijkstra_complexity_graph.png", width=Inches(6.2))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_dijk = p_img_dijk.add_run()
+    r_img_dijk.add_picture(r"figures\dijkstra_complexity_graph.png", width=Inches(5.8))
 
     p_cap_dijk = doc.add_paragraph()
     p_cap_dijk.paragraph_format.space_after = Pt(12)
@@ -517,8 +523,8 @@ def create_part3_document():
     p_img_tcam.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_tcam.paragraph_format.space_before = Pt(8)
     p_img_tcam.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"figures\tcam_fib_compression_chart.png", width=Inches(5.8))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_tcam = p_img_tcam.add_run()
+    r_img_tcam.add_picture(r"figures\tcam_fib_compression_chart.png", width=Inches(5.6))
 
     p_cap_tcam = doc.add_paragraph()
     p_cap_tcam.paragraph_format.space_after = Pt(12)
@@ -591,8 +597,7 @@ def create_part3_document():
     # ==========================================
     # APPENDIX: SOFTWARE SIMULATION & VERIFICATION PROOF
     # ==========================================
-    doc.add_page_break()
-    add_h1("Appendix: Software Simulation & Verification Proof")
+    add_h1("Appendix: Software Simulation & Verification Proof", page_break_before=True)
     add_p(
         "Software Simulation Platform: VIT Vellore Enterprise OSPF Routing Platform (campus-spine.vercel.app)\n"
         "Deployment Location: Production Web Mirror (https://campus-spine.vercel.app/) & Interactive Cisco Console (index.html / app.js)",
@@ -604,8 +609,8 @@ def create_part3_document():
     p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_img_app.paragraph_format.space_before = Pt(6)
     p_img_app.paragraph_format.space_after = Pt(2)
-    doc.add_picture(r"assets\software_view6_cisco_terminal.png", width=Inches(6.4))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_img_app = p_img_app.add_run()
+    r_img_app.add_picture(r"assets\software_view6_cisco_terminal.png", width=Inches(5.6))
 
     p_cap_app = doc.add_paragraph()
     p_cap_app.paragraph_format.space_after = Pt(10)
@@ -616,24 +621,21 @@ def create_part3_document():
     r_cap_app.font.italic = True
     r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
 
-    add_h2("Software Architecture & Module Mapping (index.html Structure):")
+    add_h2("Software Architecture & Interface Module Guide:")
     add_p(
-        "The software platform incorporates advanced telemetry, mathematical optimization benchmarks, and interactive CLI diagnostic tools across its core views in index.html:"
+        "The software platform incorporates advanced telemetry, mathematical optimization benchmarks, and interactive CLI diagnostic tools across dedicated modules accessible via the top navigation bar:"
     )
     add_bullet(
-        "Navigation Tab 6 (data-tab='cisco-terminal', view container #view-cisco-terminal). "
-        "Hosts the interactive Cisco IOS CLI terminal window (.full-cli-window) simulating CTS Core Router 1 in Area 0. The top header features quick-execution buttons (.quick-cmd-buttons) for 'show ip ospf neighbor', 'show ip route ospf', 'show ip ospf database summary', and 'ping 10.20.0.1'. Below the output terminal (#full-terminal-output), an active command line prompt (#full-terminal-input) parses custom Cisco IOS commands, allowing evaluators to verify neighbor states, routing tables, and end-to-end ping reachability in real time.",
+        "Located under the 'Cisco IOS Console' tab. Emulates a production Cisco IOS CLI terminal session on the CTS Core 1 router in Area 0. Includes one-click quick diagnostic buttons ('show ip ospf neighbor', 'show ip route ospf', 'show ip ospf database summary', 'ping 10.20.0.1') and an active terminal command prompt that parses user-entered Cisco commands and returns realistic diagnostic output.",
         bold_prefix="1. Interactive Cisco IOS CLI Terminal: "
     )
     add_bullet(
-        "Navigation Tab 1 (data-tab='interactive-map', view container #view-interactive-map). "
-        "Integrates a 372-acre campus digital twin with active traffic visualization. The left sidebar contains a real-time oscilloscope canvas (#traffic-waveform-canvas) simulating 4.8 Gbps aggregate core bandwidth, and reports 99.98% verified campus uptime alongside 1.8 ms failover convergence. The center viewport (#visual-viewport) features interactive hotspot pins with dynamic pulse animations during traffic flow tests.",
-        bold_prefix="2. 3D Digital Twin & Real-Time Flow Oscilloscope: "
+        "Located under the 'Live 3D Campus Map' tab. Features the 372-acre campus isometric visualizer with active traffic animation, a real-time flow oscilloscope simulating 4.8 Gbps core bandwidth, and live telemetry tracking 99.98% campus uptime and 1.8 ms convergence.",
+        bold_prefix="2. 3D Campus Digital Twin & Flow Telemetry: "
     )
     add_bullet(
-        "Navigation Tab 2 (data-tab='architecture-summary', view container #view-architecture-summary). "
-        "Includes the Algorithmic Performance Analysis card demonstrating the mathematical O(|E| + |V| log |V|) reduction from 1,014 operations in a flat single-area design to 156 operations per flap in the 5-area hierarchy (84.6% control-plane CPU reduction). It also features the TCAM FIB compression card verifying a 98.4% reduction from 248 individual building VLAN subnets to 4 summary prefixes.",
-        bold_prefix="3. Algorithmic Optimization & TCAM Benchmarks: "
+        "Located under the 'Area Architecture' tab. Features the Algorithmic Performance Analysis module demonstrating the mathematical SPF reduction from 1,014 operations in a flat network down to 156 operations per flap in the 5-area hierarchy (84.6% router CPU reduction). Also details the TCAM FIB compression module verifying a 98.4% table reduction from 248 individual subnets to 4 summary prefixes.",
+        bold_prefix="3. Algorithmic Optimization & TCAM Compression Benchmarks: "
     )
 
     add_h2("Key Simulation Verification Results:")
