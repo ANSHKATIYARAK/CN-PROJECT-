@@ -604,22 +604,44 @@ def create_part3_document():
         bold_prefix="Simulation Environment: "
     )
 
-    # Embedded Software Screenshot from the live web application
-    p_img_app = doc.add_paragraph()
-    p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img_app.paragraph_format.space_before = Pt(6)
-    p_img_app.paragraph_format.space_after = Pt(2)
-    r_img_app = p_img_app.add_run()
-    r_img_app.add_picture(r"assets\software_view6_cisco_terminal.png", width=Inches(5.6))
+    # Topic-Relevant Software Screenshots from the live web application
+    add_p(
+        "Below are direct visual captures from the simulation software demonstrating interactive Cisco CLI verification, algorithmic Dijkstra complexity reduction, and TCAM FIB hardware conservation specified in Part 3:"
+    )
 
-    p_cap_app = doc.add_paragraph()
-    p_cap_app.paragraph_format.space_after = Pt(10)
-    p_cap_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_cap_app = p_cap_app.add_run("Figure A3: VIT Vellore Campus Network Simulation Software (Cisco IOS Console View) — Production-Grade Web CLI Terminal Running Live Diagnostic Queries (show ip ospf neighbor, show ip route ospf, ping 10.20.0.1) on CTS Core 1.")
-    r_cap_app.font.name = 'Calibri'
-    r_cap_app.font.size = Pt(9.5)
-    r_cap_app.font.italic = True
-    r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
+    # Screenshot 1: Cisco Terminal
+    p_img1 = doc.add_paragraph()
+    p_img1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img1.paragraph_format.space_before = Pt(6)
+    p_img1.paragraph_format.space_after = Pt(2)
+    r_img1 = p_img1.add_run()
+    r_img1.add_picture(r"assets\software_view6_cisco_terminal.png", width=Inches(5.6))
+
+    p_cap1 = doc.add_paragraph()
+    p_cap1.paragraph_format.space_after = Pt(8)
+    p_cap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap1 = p_cap1.add_run("Figure A1: Simulation Software — Cisco IOS CLI Diagnostic Terminal. Location: Top navigation bar -> 'Cisco IOS Console'. Interactive production-grade terminal session executing live verification commands (show ip ospf neighbor, show ip route ospf, ping 10.20.0.1) on CTS Core 1.")
+    r_cap1.font.name = 'Calibri'
+    r_cap1.font.size = Pt(9.5)
+    r_cap1.font.italic = True
+    r_cap1.font.color.rgb = RGBColor(71, 85, 105)
+
+    # Screenshot 2: Area Architecture & Algorithmic Optimization Benchmarks
+    p_img2 = doc.add_paragraph()
+    p_img2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img2.paragraph_format.space_before = Pt(6)
+    p_img2.paragraph_format.space_after = Pt(2)
+    r_img2 = p_img2.add_run()
+    r_img2.add_picture(r"assets\software_view2_architecture.png", width=Inches(5.6))
+
+    p_cap2 = doc.add_paragraph()
+    p_cap2.paragraph_format.space_after = Pt(10)
+    p_cap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap2 = p_cap2.add_run("Figure A2: Simulation Software — Algorithmic Dijkstra Optimization & TCAM Benchmarks. Location: Top navigation bar -> 'Area Architecture'. Details the mathematical SPF complexity reduction (1,014 vs 156 ops, 84.6% CPU reduction) and TCAM FIB hardware route compression (98.4%).")
+    r_cap2.font.name = 'Calibri'
+    r_cap2.font.size = Pt(9.5)
+    r_cap2.font.italic = True
+    r_cap2.font.color.rgb = RGBColor(71, 85, 105)
 
     add_h2("Software Architecture & Interface Module Guide:")
     add_p(
@@ -630,12 +652,12 @@ def create_part3_document():
         bold_prefix="1. Interactive Cisco IOS CLI Terminal: "
     )
     add_bullet(
-        "Located under the 'Live 3D Campus Map' tab. Features the 372-acre campus isometric visualizer with active traffic animation, a real-time flow oscilloscope simulating 4.8 Gbps core bandwidth, and live telemetry tracking 99.98% campus uptime and 1.8 ms convergence.",
-        bold_prefix="2. 3D Campus Digital Twin & Flow Telemetry: "
+        "Located under the 'Area Architecture' tab. Features the Algorithmic Performance Analysis module demonstrating the mathematical SPF reduction from 1,014 operations in a flat network down to 156 operations per flap in the 5-area hierarchy (84.6% router CPU reduction). Also details the TCAM FIB compression module verifying a 98.4% table reduction from 248 individual subnets to 4 summary prefixes.",
+        bold_prefix="2. Algorithmic Optimization & TCAM Compression Benchmarks: "
     )
     add_bullet(
-        "Located under the 'Area Architecture' tab. Features the Algorithmic Performance Analysis module demonstrating the mathematical SPF reduction from 1,014 operations in a flat network down to 156 operations per flap in the 5-area hierarchy (84.6% router CPU reduction). Also details the TCAM FIB compression module verifying a 98.4% table reduction from 248 individual subnets to 4 summary prefixes.",
-        bold_prefix="3. Algorithmic Optimization & TCAM Compression Benchmarks: "
+        "Located under the 'Live 3D Campus Map' tab. Features the 372-acre campus isometric visualizer with active traffic animation, a real-time flow oscilloscope simulating 4.8 Gbps core bandwidth, and live telemetry tracking 99.98% campus uptime and 1.8 ms convergence.",
+        bold_prefix="3. 3D Campus Digital Twin & Flow Telemetry: "
     )
 
     add_h2("Key Simulation Verification Results:")

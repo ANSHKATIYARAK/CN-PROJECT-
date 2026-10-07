@@ -650,23 +650,44 @@ def create_part2_document():
         bold_prefix="Simulation Environment: "
     )
 
-    # Embedded Software Screenshot from the live web application
-    p_img_app = doc.add_paragraph()
-    p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img_app.paragraph_format.space_before = Pt(6)
-    p_img_app.paragraph_format.space_after = Pt(2)
-    r_img_app = p_img_app.add_run()
-    r_img_app.add_picture(r"assets\software_view5_failover_demo.png", width=Inches(5.6))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    # Topic-Relevant Software Screenshots from the live web application
+    add_p(
+        "Below are direct visual captures from the simulation software demonstrating dynamic failover, sub-second convergence telemetry, and RFC 2328 protocol mechanics specified in Part 2:"
+    )
 
-    p_cap_app = doc.add_paragraph()
-    p_cap_app.paragraph_format.space_after = Pt(10)
-    p_cap_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_cap_app = p_cap_app.add_run("Figure A2: VIT Vellore Campus Network Simulation Software (Dynamic Failover Demo View) — Simulated Primary Fiber Severance (CTS-Core1 <-> SJT-ABR), Sub-Second Failover Telemetry (1.8 ms Latency, 0.00% Packet Loss), and Live Cisco IOS Syslog Event Stream.")
-    r_cap_app.font.name = 'Calibri'
-    r_cap_app.font.size = Pt(9.5)
-    r_cap_app.font.italic = True
-    r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
+    # Screenshot 1: Dynamic Failover Demo
+    p_img1 = doc.add_paragraph()
+    p_img1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img1.paragraph_format.space_before = Pt(6)
+    p_img1.paragraph_format.space_after = Pt(2)
+    r_img1 = p_img1.add_run()
+    r_img1.add_picture(r"assets\software_view5_failover_demo.png", width=Inches(5.6))
+
+    p_cap1 = doc.add_paragraph()
+    p_cap1.paragraph_format.space_after = Pt(8)
+    p_cap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap1 = p_cap1.add_run("Figure A1: Simulation Software — Dynamic Failover Demo Console. Location: Top navigation bar -> 'Dynamic Failover Demo'. Shows simulated primary fiber severance (CTS-Core1 <-> SJT-ABR), sub-second failover telemetry (1.8 ms latency, 0.00% packet loss), and live Cisco IOS Syslog event stream.")
+    r_cap1.font.name = 'Calibri'
+    r_cap1.font.size = Pt(9.5)
+    r_cap1.font.italic = True
+    r_cap1.font.color.rgb = RGBColor(71, 85, 105)
+
+    # Screenshot 2: Protocol Mechanics
+    p_img2 = doc.add_paragraph()
+    p_img2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img2.paragraph_format.space_before = Pt(6)
+    p_img2.paragraph_format.space_after = Pt(2)
+    r_img2 = p_img2.add_run()
+    r_img2.add_picture(r"assets\software_view4_protocol.png", width=Inches(5.6))
+
+    p_cap2 = doc.add_paragraph()
+    p_cap2.paragraph_format.space_after = Pt(10)
+    p_cap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap2 = p_cap2.add_run("Figure A2: Simulation Software — RFC 2328 Protocol Mechanics & Packet Header Inspection. Location: Top navigation bar -> 'Protocol & Packets'. Displays the bit-level 24-byte OSPF packet header grid and the 8-state neighbor finite state machine sequence from Down to Full.")
+    r_cap2.font.name = 'Calibri'
+    r_cap2.font.size = Pt(9.5)
+    r_cap2.font.italic = True
+    r_cap2.font.color.rgb = RGBColor(71, 85, 105)
 
     add_h2("Software Architecture & Interface Module Guide:")
     add_p(

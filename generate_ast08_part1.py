@@ -802,22 +802,61 @@ def create_part1_document():
         bold_prefix="Simulation Environment: "
     )
 
-    # Embedded Software Screenshot from the live web application
-    p_img_app = doc.add_paragraph()
-    p_img_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_img_app.paragraph_format.space_before = Pt(6)
-    p_img_app.paragraph_format.space_after = Pt(2)
-    r_img_app = p_img_app.add_run()
-    r_img_app.add_picture(r"assets\software_view1_interactive_map.png", width=Inches(5.6))
+    # Topic-Relevant Software Screenshots from the live web application
+    add_p(
+        "Below are direct visual captures from the simulation software demonstrating the architectural design, failure domain isolation, and VLSM addressing plan specified in Part 1:"
+    )
 
-    p_cap_app = doc.add_paragraph()
-    p_cap_app.paragraph_format.space_after = Pt(10)
-    p_cap_app.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_cap_app = p_cap_app.add_run("Figure A1: VIT Vellore Campus Network Simulation Software (Live 3D Campus Map View) — Interactive 372-Acre Topology Visualizer, Clickable Building Hotspot Pins, Selected Node Inspector (Gandhi Block Admin-ABR / Area 30), Dynamic Routing Table (FIB), and Live Network Controls.")
-    r_cap_app.font.name = 'Calibri'
-    r_cap_app.font.size = Pt(9.5)
-    r_cap_app.font.italic = True
-    r_cap_app.font.color.rgb = RGBColor(71, 85, 105)
+    # Screenshot 1: Interactive Map & Node Inspector
+    p_img1 = doc.add_paragraph()
+    p_img1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img1.paragraph_format.space_before = Pt(6)
+    p_img1.paragraph_format.space_after = Pt(2)
+    r_img1 = p_img1.add_run()
+    r_img1.add_picture(r"assets\software_view1_interactive_map.png", width=Inches(5.6))
+
+    p_cap1 = doc.add_paragraph()
+    p_cap1.paragraph_format.space_after = Pt(8)
+    p_cap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap1 = p_cap1.add_run("Figure A1: Simulation Software — Live 3D Campus Map & Node Inspector. Location: Top navigation bar -> 'Live 3D Campus Map'. Shows the 372-acre multi-area topology, building gateway pins, selected node inspector (Admin-ABR Area 30), real-time FIB table, and live link controls.")
+    r_cap1.font.name = 'Calibri'
+    r_cap1.font.size = Pt(9.5)
+    r_cap1.font.italic = True
+    r_cap1.font.color.rgb = RGBColor(71, 85, 105)
+
+    # Screenshot 2: Area Architecture
+    p_img2 = doc.add_paragraph()
+    p_img2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img2.paragraph_format.space_before = Pt(6)
+    p_img2.paragraph_format.space_after = Pt(2)
+    r_img2 = p_img2.add_run()
+    r_img2.add_picture(r"assets\software_view2_architecture.png", width=Inches(5.6))
+
+    p_cap2 = doc.add_paragraph()
+    p_cap2.paragraph_format.space_after = Pt(8)
+    p_cap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap2 = p_cap2.add_run("Figure A2: Simulation Software — 5-Area Architecture & Failure Domain Isolation. Location: Top navigation bar -> 'Area Architecture'. Details the failure domain boundaries across Area 0, Area 10, Area 20, Area 30, and Area 40 alongside algorithmic Dijkstra SPF complexity benchmarks.")
+    r_cap2.font.name = 'Calibri'
+    r_cap2.font.size = Pt(9.5)
+    r_cap2.font.italic = True
+    r_cap2.font.color.rgb = RGBColor(71, 85, 105)
+
+    # Screenshot 3: VLSM Addressing
+    p_img3 = doc.add_paragraph()
+    p_img3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img3.paragraph_format.space_before = Pt(6)
+    p_img3.paragraph_format.space_after = Pt(2)
+    r_img3 = p_img3.add_run()
+    r_img3.add_picture(r"assets\software_view3_addressing_vlsm.png", width=Inches(5.6))
+
+    p_cap3 = doc.add_paragraph()
+    p_cap3.paragraph_format.space_after = Pt(10)
+    p_cap3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_cap3 = p_cap3.add_run("Figure A3: Simulation Software — Campus VLSM Addressing & Route Aggregation Table. Location: Top navigation bar -> 'Addressing & VLSM'. Tabulates the university-wide Class A 10.0.0.0/8 subnet hierarchy, CIDR masks, host capacities, and ABR summary aggregation prefixes.")
+    r_cap3.font.name = 'Calibri'
+    r_cap3.font.size = Pt(9.5)
+    r_cap3.font.italic = True
+    r_cap3.font.color.rgb = RGBColor(71, 85, 105)
 
     add_h2("Software Architecture & Interface Module Guide:")
     add_p(
@@ -828,16 +867,16 @@ def create_part1_document():
         bold_prefix="1. Interactive 3D Topology & Node Inspector: "
     )
     add_bullet(
-        "Located in the left sidebar of the campus map view. Provides dynamic toggle switches to simulate optical trunk breaks (CTS to SJT, CTS to Tech Tower, CTS to Hostels, and Inter-Tower Backup). Also integrates a real-time 4.8 Gbps traffic flow oscilloscope and an end-to-end Test Packet Dispatcher with path trace animations, latency readouts, and hop metric calculations.",
-        bold_prefix="2. Live Network Controls & Flow Dispatcher: "
-    )
-    add_bullet(
         "Located under the 'Area Architecture' tab. Features structured engineering breakdown cards detailing failure domain boundaries across Area 0 (Backbone Core), Area 10 (Academic Core), Area 20 (Residential Hostels), Area 30 (Totally Stubby Admin), and Area 40 (Research NSSA), alongside mathematical Dijkstra complexity comparative benchmarks.",
-        bold_prefix="3. Area Architecture & Failure Domain Isolation: "
+        bold_prefix="2. Area Architecture & Failure Domain Isolation: "
     )
     add_bullet(
         "Located under the 'Addressing & VLSM' tab. Presents the university-wide Class A Private 10.0.0.0/8 VLSM addressing plan, displaying exact subnet masks, usable host capacities, and ABR summary aggregation prefixes.",
-        bold_prefix="4. Campus VLSM Addressing & Route Aggregation Table: "
+        bold_prefix="3. Campus VLSM Addressing & Route Aggregation Table: "
+    )
+    add_bullet(
+        "Located in the left sidebar of the campus map view. Provides dynamic toggle switches to simulate optical trunk breaks (CTS to SJT, CTS to Tech Tower, CTS to Hostels, and Inter-Tower Backup). Also integrates a real-time 4.8 Gbps traffic flow oscilloscope and an end-to-end Test Packet Dispatcher with path trace animations, latency readouts, and hop metric calculations.",
+        bold_prefix="4. Live Network Controls & Flow Dispatcher: "
     )
 
     add_h2("Key Simulation Verification Results:")
