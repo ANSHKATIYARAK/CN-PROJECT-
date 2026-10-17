@@ -1,0 +1,74 @@
+========================================================================================
+CISCO PACKET TRACER END-DEVICE (PC / LAPTOP / SERVER) STATIC IP ADDRESS TABLE
+========================================================================================
+Use these exact IP, Subnet Mask, and Default Gateway assignments in Cisco Packet Tracer
+by clicking each end device -> "Desktop" tab -> "IP Configuration":
+
+----------------------------------------------------------------------------------------
+1. AREA 10: ACADEMIC CORE (SILVER JUBILEE TOWER - SJT)
+----------------------------------------------------------------------------------------
+Device Name:      PC-Academic (or SJT-Faculty-PC)
+Connected to:     Acad-SW1 (FastEthernet0/2)
+IP Address:       10.10.0.10
+Subnet Mask:      255.255.192.0   (CIDR: /18)
+Default Gateway:  10.10.0.1       (SJT-ABR Gig0/0)
+DNS Server:       10.0.0.1
+
+Device Name:      Laptop-Academic (or SJT-Lab-Laptop)
+Connected to:     Acad-SW1 (FastEthernet0/3)
+IP Address:       10.10.0.11
+Subnet Mask:      255.255.192.0   (CIDR: /18)
+Default Gateway:  10.10.0.1
+DNS Server:       10.0.0.1
+
+----------------------------------------------------------------------------------------
+2. AREA 20: RESIDENTIAL ZONE (HOSTELS COMPLEX)
+----------------------------------------------------------------------------------------
+Device Name:      PC-Hostel (or MH-Student-PC)
+Connected to:     Hst-SW1 (FastEthernet0/2)
+IP Address:       10.20.0.10
+Subnet Mask:      255.255.128.0   (CIDR: /17)
+Default Gateway:  10.20.0.1       (MH-ABR Gig0/0)
+DNS Server:       10.0.0.1
+
+Device Name:      Laptop-Hostel (or WH-Student-Laptop)
+Connected to:     Hst-SW1 (FastEthernet0/3)
+IP Address:       10.20.0.11
+Subnet Mask:      255.255.128.0   (CIDR: /17)
+Default Gateway:  10.20.0.1
+DNS Server:       10.0.0.1
+
+----------------------------------------------------------------------------------------
+3. AREA 30: ADMINISTRATIVE & EXAMINATION ZONE (GANDHI BLOCK - TOTALLY STUBBY)
+----------------------------------------------------------------------------------------
+Device Name:      PC-Admin (or Registrar-PC)
+Connected to:     Admin-SW1 (FastEthernet0/2)
+IP Address:       10.30.0.10
+Subnet Mask:      255.255.0.0     (CIDR: /16)
+Default Gateway:  10.30.0.1       (Admin-ABR Gig0/0)
+DNS Server:       10.0.0.1
+
+Device Name:      Server-Admin (or Exam-Controller-DB)
+Connected to:     Admin-SW1 (FastEthernet0/24)
+IP Address:       10.30.0.50
+Subnet Mask:      255.255.0.0     (CIDR: /16)
+Default Gateway:  10.30.0.1
+DNS Server:       10.0.0.1
+
+----------------------------------------------------------------------------------------
+4. AREA 40: RESEARCH & INCUBATION PARK (PEARL RESEARCH PARK - NSSA)
+----------------------------------------------------------------------------------------
+Device Name:      PC-Research (or HPC-Workstation)
+Connected to:     Rsrch-SW1 (FastEthernet0/2)
+IP Address:       10.40.0.10
+Subnet Mask:      255.255.0.0     (CIDR: /16)
+Default Gateway:  10.40.0.1       (PRP-ABR Gig0/0)
+DNS Server:       10.0.0.1
+
+Device Name:      Server-Research (or AI-Supercomputing-Cluster)
+Connected to:     Rsrch-SW1 (FastEthernet0/24)
+IP Address:       10.40.0.50
+Subnet Mask:      255.255.0.0     (CIDR: /16)
+Default Gateway:  10.40.0.1
+DNS Server:       10.0.0.1
+========================================================================================

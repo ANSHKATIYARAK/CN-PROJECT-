@@ -1,0 +1,364 @@
+========================================================================================
+VIT VELLORE ENTERPRISE 5-AREA OSPF ARCHITECTURE - CISCO IOS MASTER CONFIGURATION
+Project: BAITE203 / AST08 Enterprise Campus Network
+Team: Ansh Katiyar (25BIT0333), Arham Choudhary (25BIT0208), Sri Harsha (25BIT0292)
+========================================================================================
+
+HOW TO USE IN CISCO PACKET TRACER:
+1. Click on the respective router in Packet Tracer workspace.
+2. Select the "CLI" tab.
+3. If prompted "Would you like to enter the initial configuration dialog? [yes/no]:", type "no" and press Enter.
+4. Press Enter until you see Router>
+5. Copy the exact block below for that router and paste it directly into the CLI.
+6. The router will automatically configure hostnames, interfaces, loopbacks, and OSPF!
+
+========================================================================================
+ROUTER 1: CTS-CORE1 (Area 0 Backbone Spine Router)
+========================================================================================
+enable
+configure terminal
+hostname CTS-Core1
+ip routing
+interface Loopback0
+ ip address 10.0.0.1 255.255.255.255
+ ip ospf 1 area 0
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description 100G Trunk to CTS-Core2
+ ip address 10.0.0.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description 100G Trunk l1 to SJT-ABR (Area 10)
+ ip address 10.0.0.5 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description 100G Trunk l2 to TT-ABR (Area 10)
+ ip address 10.0.0.9 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/1/0
+ description 10G Trunk l5 to Admin-ABR (Area 30)
+ ip address 10.0.0.21 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/1/1
+ description 100G Trunk l6 to PRP-ABR (Area 40)
+ ip address 10.0.0.25 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.0.0.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ network 10.0.0.0 0.0.0.255 area 0
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 2: CTS-CORE2 (Area 0 Secondary Spine / Hostel Aggregator)
+========================================================================================
+enable
+configure terminal
+hostname CTS-Core2
+ip routing
+interface Loopback0
+ ip address 10.0.0.2 255.255.255.255
+ ip ospf 1 area 0
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description 100G Trunk to CTS-Core1
+ ip address 10.0.0.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description 40G Trunk l3 to MH-ABR (Area 20 Hostels)
+ ip address 10.0.0.13 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 2
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description 40G Trunk l4 to WH-ABR (Area 20 Hostels)
+ ip address 10.0.0.17 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 2
+ no shutdown
+exit
+router ospf 1
+ router-id 10.0.0.2
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ network 10.0.0.0 0.0.0.255 area 0
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 3: SJT-ABR (Area 10 Academic Core - Silver Jubilee Tower)
+========================================================================================
+enable
+configure terminal
+hostname SJT-ABR
+ip routing
+interface Loopback0
+ ip address 10.10.0.1 255.255.255.255
+ ip ospf 1 area 10
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description SJT Floors 1-12 Academic LAN
+ ip address 10.10.0.1 255.255.192.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description Uplink l1 to CTS-Core1 (Area 0)
+ ip address 10.0.0.6 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description Backup Conduit l8 to TT-ABR (Area 10)
+ ip address 10.10.4.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.10.0.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 10 range 10.10.0.0 255.255.0.0
+ network 10.0.0.4 0.0.0.3 area 0
+ network 10.10.0.0 0.0.255.255 area 10
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 4: TT-ABR (Area 10 Academic Core - Technology Tower)
+========================================================================================
+enable
+configure terminal
+hostname TT-ABR
+ip routing
+interface Loopback0
+ ip address 10.10.64.1 255.255.255.255
+ ip ospf 1 area 10
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description TT Computing Labs LAN
+ ip address 10.10.64.1 255.255.192.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description Uplink l2 to CTS-Core1 (Area 0)
+ ip address 10.0.0.10 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description Backup Conduit l8 to SJT-ABR (Area 10)
+ ip address 10.10.4.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.10.64.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 10 range 10.10.0.0 255.255.0.0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.10.0.0 0.0.255.255 area 10
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 5: MH-ABR (Area 20 Residential Zone - Men's Hostels Complex)
+========================================================================================
+enable
+configure terminal
+hostname MH-ABR
+ip routing
+interface Loopback0
+ ip address 10.20.0.1 255.255.255.255
+ ip ospf 1 area 20
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description Men's Hostels Student Access LAN
+ ip address 10.20.0.1 255.255.128.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description Uplink l3 to CTS-Core2 (Area 0)
+ ip address 10.0.0.14 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 2
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description Inter-Hostel Ring l9 to WH-ABR (Area 20)
+ ip address 10.20.4.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.20.0.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 20 range 10.20.0.0 255.255.0.0
+ network 10.0.0.12 0.0.0.3 area 0
+ network 10.20.0.0 0.0.255.255 area 20
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 6: WH-ABR (Area 20 Residential Zone - Women's Hostels Complex)
+========================================================================================
+enable
+configure terminal
+hostname WH-ABR
+ip routing
+interface Loopback0
+ ip address 10.20.128.1 255.255.255.255
+ ip ospf 1 area 20
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description Women's Hostels Student Access LAN
+ ip address 10.20.128.1 255.255.128.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description Uplink l4 to CTS-Core2 (Area 0)
+ ip address 10.0.0.18 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 2
+ no shutdown
+exit
+interface GigabitEthernet0/0/2
+ description Inter-Hostel Ring l9 to MH-ABR (Area 20)
+ ip address 10.20.4.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.20.128.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 20 range 10.20.0.0 255.255.0.0
+ network 10.0.0.16 0.0.0.3 area 0
+ network 10.20.0.0 0.0.255.255 area 20
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 7: ADMIN-ABR (Area 30 Totally Stubby Area - Gandhi Admin)
+========================================================================================
+enable
+configure terminal
+hostname Admin-ABR
+ip routing
+interface Loopback0
+ ip address 10.30.0.1 255.255.255.255
+ ip ospf 1 area 30
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description Admin, Finance & Exam Server LAN
+ ip address 10.30.0.1 255.255.0.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description 10G Secure Uplink l5 to CTS-Core1 (Area 0)
+ ip address 10.0.0.22 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.30.0.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 30 stub no-summary
+ network 10.0.0.20 0.0.0.3 area 0
+ network 10.30.0.0 0.0.255.255 area 30
+exit
+end
+write memory
+
+
+========================================================================================
+ROUTER 8: PRP-ABR (Area 40 Not-So-Stubby Area - Pearl Research Park)
+========================================================================================
+enable
+configure terminal
+hostname PRP-ABR
+ip routing
+interface Loopback0
+ ip address 10.40.0.1 255.255.255.255
+ ip ospf 1 area 40
+ no shutdown
+exit
+interface GigabitEthernet0/0/0
+ description Research Park AI & Supercomputing Cluster
+ ip address 10.40.0.1 255.255.0.0
+ no shutdown
+exit
+interface GigabitEthernet0/0/1
+ description 100G Research Spine l6 to CTS-Core1 (Area 0)
+ ip address 10.0.0.26 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf cost 1
+ no shutdown
+exit
+router ospf 1
+ router-id 10.40.0.1
+ auto-cost reference-bandwidth 100000
+ log-adjacency-changes detail
+ passive-interface GigabitEthernet0/0/0
+ area 40 nssa
+ area 40 range 10.40.0.0 255.255.0.0
+ network 10.0.0.24 0.0.0.3 area 0
+ network 10.40.0.0 0.0.255.255 area 40
+exit
+end
+write memory
+========================================================================================
