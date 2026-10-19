@@ -347,7 +347,7 @@ def build_master_final_report():
         p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p1.paragraph_format.space_before = Pt(3)
         p1.paragraph_format.space_after = Pt(1.5)
-        r1 = p1.add_run("LIVE INTERACTIVE WEB SIMULATION & PRODUCTION DIGITAL TWIN")
+        r1 = p1.add_run("LIVE INTERACTIVE WEB SIMULATION PLATFORM")
         r1.font.name = "Lato"
         r1.font.size = Pt(10.5)
         r1.font.bold = True
@@ -408,7 +408,7 @@ def build_master_final_report():
         "The objective of this engineering project is to architect, configure, and evaluate an enterprise-grade multi-area Open Shortest Path First "
         "(OSPF) routing infrastructure capable of interconnecting multiple academic, administrative, residential, and research departments across "
         "the 372-acre Vellore Institute of Technology (VIT Vellore) campus. The network model is rigorously validated through Cisco Packet Tracer 8.2, "
-        "Mininet 2.3 emulation on Ubuntu Linux, Wireshark packet capture dissection, and a live web-based digital twin simulator."
+        "Mininet 2.3 emulation on Ubuntu Linux, Wireshark packet capture dissection, and a live web-based network simulator."
     )
 
     add_subsection_h2("1.2 Operational Scale Across Campus Departments")
@@ -832,7 +832,7 @@ def build_master_final_report():
     # SECTION 10: INTERACTIVE SIMULATION PLATFORM WALKTHROUGH
     add_section_h1("10. Interactive Simulation Platform & Software Implementation", page_break_before=True)
     add_body_p(
-        "To provide verifiable proof beyond static configuration files, an enterprise digital twin platform was built and deployed at "
+        "To provide verifiable proof beyond static configuration files, an enterprise interactive network simulation platform was built and deployed at "
         "https://campus-spine.vercel.app/. The web application features an independent RFC 2328 link-state routing engine executing real-time "
         "Dijkstra calculations, link failover injection, and interactive Cisco CLI emulation. Below are verified interface views:"
     )
@@ -859,7 +859,7 @@ def build_master_final_report():
     add_caption("Figure 4.7: Software View 7 - Algorithmic Dijkstra Optimization & TCAM Compression Benchmarks.")
 
     add_image(r"assets\showcase_3d_campus.jpg", width_in=5.4)
-    add_caption("Figure 4.8: Software View 8 - Isometric 3D Digital Twin of the 372-Acre VIT Vellore Campus.")
+    add_caption("Figure 4.8: Software View 8 - Isometric 3D Topology Visualization of the 372-Acre VIT Vellore Campus.")
 
     # SECTION 11: ENTERPRISE SCALABILITY & REAL-WORLD ROADMAP
     add_section_h1("11. Enterprise Scalability & Real-World Campus Roadmap", page_break_before=True)
@@ -872,7 +872,7 @@ def build_master_final_report():
     add_section_h1("12. Project Conclusion & Verification Summary")
     add_body_p(
         "This engineering project successfully achieved all objectives established in the assigned problem statement. Through a rigorous combination "
-        "of theoretical analysis, Cisco Packet Tracer 8.2 simulation, Mininet emulation, Wireshark packet dissection, and a live web digital twin, "
+        "of theoretical analysis, Cisco Packet Tracer 8.2 simulation, Mininet emulation, Wireshark packet dissection, and a live web network simulator, "
         "the multi-area OSPF routing architecture has been empirically proven to provide deterministic scalability, sub-second failover, and "
         "exceptional hardware efficiency for the 40,000-user VIT Vellore campus."
     )
@@ -883,7 +883,7 @@ def build_master_final_report():
         ("Hardware FIB Table Compression", ">= 95% Reduction", "98.4% Reduction (248 subnets summarized to 4 prefixes)"),
         ("Optical Link Failover Convergence", "<= 2 milliseconds", "1.89 ms Total Reroute (BFD fast hardware detection)"),
         ("Control-Plane Dijkstra Compute", ">= 75% CPU Reduction", "84.6% Reduction (1,014 down to 156 operations per flap)"),
-        ("Simulation Software & Digital Twin", "Interactive Verification", "Live Web Simulator deployed at https://campus-spine.vercel.app/"),
+        ("Simulation Software & Web Platform", "Interactive Verification", "Live Web Simulator deployed at https://campus-spine.vercel.app/"),
         ("Standard Protocol Fidelity", "100% RFC 2328 Compliance", "Full compliance verified via Cisco CLI & Wireshark capture")
     ]
     for r_idx, row in enumerate(tbl_final_data):
@@ -891,8 +891,8 @@ def build_master_final_report():
             tbl_final.rows[r_idx].cells[c_idx].text = val
     format_styled_table(tbl_final, [3000, 3000, 3864])
 
-    # Executive Engineering Summary & Key Quantitative Achievements
-    add_section_h1("Executive Engineering Summary")
+    # Summary & Key Quantitative Achievements
+    add_section_h1("Summary")
     add_body_p(
         "This master engineering document provides the comprehensive, end-to-end design, implementation, and empirical verification "
         "of an enterprise-grade multi-area Open Shortest Path First (OSPF) routing architecture for the 372-acre Vellore Institute "

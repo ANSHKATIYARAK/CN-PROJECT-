@@ -657,7 +657,7 @@ def create_part3_document():
     )
     add_bullet(
         "Located under the 'Live 3D Campus Map' tab. Features the 372-acre campus isometric visualizer with active traffic animation, a real-time flow oscilloscope simulating 4.8 Gbps core bandwidth, and live telemetry tracking 99.98% campus uptime and 1.8 ms convergence.",
-        bold_prefix="3. 3D Campus Digital Twin & Flow Telemetry: "
+        bold_prefix="3. 3D Campus Topology & Flow Telemetry: "
     )
 
     add_h2("Key Simulation Verification Results:")
