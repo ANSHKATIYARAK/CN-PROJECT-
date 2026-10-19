@@ -397,21 +397,6 @@ def build_master_final_report():
     # ==========================================
     # INSERT CONTENT
     # ==========================================
-    # Deployment Callout Box right after Candidates table
-    add_deployment_box()
-
-    # Executive Engineering Summary
-    add_section_h1("Executive Engineering Summary")
-    add_body_p(
-        "This master engineering document provides the comprehensive, end-to-end design, implementation, and empirical verification "
-        "of an enterprise-grade multi-area Open Shortest Path First (OSPF) routing architecture for the 372-acre Vellore Institute "
-        "of Technology (VIT Vellore) campus network, serving over 40,000 active students and faculty."
-    )
-    add_bullet_p("98.4% TCAM FIB Compression: Hardware routing tables condensed from 248 individual /24 and /28 subnets down to 4 aggregated /16 supernet prefixes.", bold_prefix="1. Route Table Scaling: ")
-    add_bullet_p("Sub-Second Link Failover (1.89 ms): Loss of light detection and Bidirectional Forwarding Detection (BFD) achieve fast rerouting well within the <= 2 ms SLA.", bold_prefix="2. Convergence SLA: ")
-    add_bullet_p("84.6% Dijkstra CPU Compute Reduction: Multi-area modularization isolates Link-State Update (LSU) flooding, reducing SPF operations per flap from 1,014 down to 156.", bold_prefix="3. Control-Plane Optimization: ")
-    add_bullet_p("Reference Bandwidth Calibrated to 100 Gbps: Metric formula auto-calibrated to reference bandwidth 100000, ensuring true cost differentiation over high-speed optical links.", bold_prefix="4. Optical Metric Precision: ")
-
     # SECTION 1: PROBLEM FORMULATION & MULTI-DEPARTMENT SCOPE (REVIEW 1)
     add_section_h1("1. Problem Formulation & Multi-Department Scope", page_break_before=True)
     add_subsection_h2("1.1 Assigned Problem Statement")
@@ -856,6 +841,21 @@ def build_master_final_report():
         for c_idx, val in enumerate(row):
             tbl_final.rows[r_idx].cells[c_idx].text = val
     format_styled_table(tbl_final, [3000, 3000, 3864])
+
+    # Executive Engineering Summary & Key Quantitative Achievements
+    add_section_h1("Executive Engineering Summary")
+    add_body_p(
+        "This master engineering document provides the comprehensive, end-to-end design, implementation, and empirical verification "
+        "of an enterprise-grade multi-area Open Shortest Path First (OSPF) routing architecture for the 372-acre Vellore Institute "
+        "of Technology (VIT Vellore) campus network, serving over 40,000 active students and faculty."
+    )
+    add_bullet_p("98.4% TCAM FIB Compression: Hardware routing tables condensed from 248 individual /24 and /28 subnets down to 4 aggregated /16 supernet prefixes.", bold_prefix="1. Route Table Scaling: ")
+    add_bullet_p("Sub-Second Link Failover (1.89 ms): Loss of light detection and Bidirectional Forwarding Detection (BFD) achieve fast rerouting well within the <= 2 ms SLA.", bold_prefix="2. Convergence SLA: ")
+    add_bullet_p("84.6% Dijkstra CPU Compute Reduction: Multi-area modularization isolates Link-State Update (LSU) flooding, reducing SPF operations per flap from 1,014 down to 156.", bold_prefix="3. Control-Plane Optimization: ")
+    add_bullet_p("Reference Bandwidth Calibrated to 100 Gbps: Metric formula auto-calibrated to reference bandwidth 100000, ensuring true cost differentiation over high-speed optical links.", bold_prefix="4. Optical Metric Precision: ")
+
+    # Deployment Callout Box
+    add_deployment_box()
 
     # Save document
     print("Saving document to:", output_docx)
