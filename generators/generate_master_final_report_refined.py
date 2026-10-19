@@ -589,6 +589,55 @@ def build_master_final_report():
         " network 10.20.0.0 0.0.255.255 area 20"
     )
 
+    add_subsection_h2("4.4 Central Administration Totally Stubby Router (Admin-ABR - Area 30)")
+    add_code_block(
+        "hostname Admin-ABR\n"
+        "!\n"
+        "interface GigabitEthernet0/0/0\n"
+        " description Gandhi Block Administration, Finance & Exam Server Subnet\n"
+        " ip address 10.30.0.1 255.255.0.0\n"
+        "!\n"
+        "interface GigabitEthernet0/0/1\n"
+        " description 10G Secure Armored Optical Trunk l5 to CTS-Core1 (Area 0)\n"
+        " ip address 10.0.0.22 255.255.255.252\n"
+        " ip ospf network point-to-point\n"
+        " ip ospf cost 1\n"
+        "!\n"
+        "router ospf 1\n"
+        " router-id 10.30.0.1\n"
+        " auto-cost reference-bandwidth 100000\n"
+        " log-adjacency-changes detail\n"
+        " passive-interface GigabitEthernet0/0/0\n"
+        " area 30 stub no-summary\n"
+        " network 10.0.0.20 0.0.0.3 area 0\n"
+        " network 10.30.0.0 0.0.255.255 area 30"
+    )
+
+    add_subsection_h2("4.5 Research & Innovation NSSA Router (PRP-ABR - Area 40)")
+    add_code_block(
+        "hostname PRP-ABR\n"
+        "!\n"
+        "interface GigabitEthernet0/0/0\n"
+        " description Pearl Research Park Supercomputing & AI Lab Subnet\n"
+        " ip address 10.40.0.1 255.255.0.0\n"
+        "!\n"
+        "interface GigabitEthernet0/0/1\n"
+        " description 100G Research Optical Trunk l6 to CTS-Core1 (Area 0 Backbone)\n"
+        " ip address 10.0.0.26 255.255.255.252\n"
+        " ip ospf network point-to-point\n"
+        " ip ospf cost 1\n"
+        "!\n"
+        "router ospf 1\n"
+        " router-id 10.40.0.1\n"
+        " auto-cost reference-bandwidth 100000\n"
+        " log-adjacency-changes detail\n"
+        " passive-interface GigabitEthernet0/0/0\n"
+        " area 40 nssa\n"
+        " area 40 range 10.40.0.0 255.255.0.0\n"
+        " network 10.0.0.24 0.0.0.3 area 0\n"
+        " network 10.40.0.0 0.0.255.255 area 40"
+    )
+
     # ==========================================
     # PART 2: IMPLEMENTATION, PACKET ANALYSIS & CONVERGENCE (REVIEW 2)
     # ==========================================
