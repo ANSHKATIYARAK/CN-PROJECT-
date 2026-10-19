@@ -861,15 +861,8 @@ def build_master_final_report():
     add_image(r"assets\showcase_3d_campus.jpg", width_in=5.4)
     add_caption("Figure 4.8: Software View 8 - Isometric 3D Topology Visualization of the 372-Acre VIT Vellore Campus.")
 
-    # SECTION 11: ENTERPRISE SCALABILITY & REAL-WORLD ROADMAP
-    add_section_h1("11. Enterprise Scalability & Real-World Campus Roadmap", page_break_before=True)
-    add_body_p("To future-proof the campus backbone for next-generation workloads over the next decade, three architectural evolutions are detailed:")
-    add_bullet_p("Migrating to OSPFv3 (RFC 5340) enables native dual-stack IPv4/IPv6 routing without changing the physical topology. OSPFv3 runs on a per-link basis rather than per-subnet, allowing seamless 128-bit IPv6 addressing across all academic smart labs.", bold_prefix="1. IPv6 OSPFv3 Dual-Stack Migration: ")
-    add_bullet_p("Replacing current 100G QSFP28 optical modules with 400G QSFP-DD optics on the CTS-Core spine multiplies backbone throughput fourfold to accommodate AI training clusters in Pearl Research Park without altering OSPF area boundaries.", bold_prefix="2. 400 Gbps Core Optical Spine Upgrade: ")
-    add_bullet_p("Deploying an OpenFlow/P4 SDN overlay controller atop the deterministic OSPF underlay enables programmatic traffic steering, intent-based routing, and zero-trust microsegmentation between hostel Wi-Fi and financial databases.", bold_prefix="3. SDN & Network Programmability Integration: ")
-
-    # SECTION 12: CONCLUSION & VERIFICATION SUMMARY
-    add_section_h1("12. Project Conclusion & Verification Summary")
+    # SECTION 11: CONCLUSION & VERIFICATION SUMMARY
+    add_section_h1("11. Project Conclusion & Verification Summary", page_break_before=True)
     add_body_p(
         "This engineering project successfully achieved all objectives established in the assigned problem statement. Through a rigorous combination "
         "of theoretical analysis, Cisco Packet Tracer 8.2 simulation, Mininet emulation, Wireshark packet dissection, and a live web network simulator, "
@@ -894,7 +887,7 @@ def build_master_final_report():
     # Summary & Key Quantitative Achievements
     add_section_h1("Summary")
     add_body_p(
-        "This master engineering document provides the comprehensive, end-to-end design, implementation, and empirical verification "
+        "This report provides the comprehensive, end-to-end design, implementation, and empirical verification "
         "of an enterprise-grade multi-area Open Shortest Path First (OSPF) routing architecture for the 372-acre Vellore Institute "
         "of Technology (VIT Vellore) campus network, serving over 40,000 active students and faculty."
     )
