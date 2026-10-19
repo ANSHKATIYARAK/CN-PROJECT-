@@ -20,6 +20,17 @@ const CAMPUS_TOPOLOGY = {
       desc: 'Hosts CSE, SCOPE, and SENSE academic departments across 12 floors. Serves as Area Border Router (ABR) aggregating academic subnets into 10.10.0.0/16 before advertising to the backbone.'
     },
     {
+      id: 'SMV-ABR',
+      label: 'SMV Block',
+      fullName: 'Sir M. Visvesvaraya Block (SMV-ABR)',
+      role: 'Area 10 - Academic Smart Classrooms',
+      rid: '10.10.32.1',
+      area: 10,
+      subnet: '10.10.32.0/19',
+      capacity: '8,190 hosts (SMV Hexagon & Computing Labs)',
+      desc: 'Hosts smart classrooms, engineering seminar halls, and academic labs in Area 10. Interconnected with Silver Jubilee Tower (SJT) and Tech Tower for intra-area academic route distribution.'
+    },
+    {
       id: 'TT-ABR',
       label: 'Tech Tower',
       fullName: 'Technology Tower (TT-ABR)',
@@ -94,7 +105,9 @@ const CAMPUS_TOPOLOGY = {
     { id: 'l5', source: 'CTS-Core1', target: 'Admin-ABR', cost: 1, state: 'UP', desc: '10G Admin Secure Trunk' },
     { id: 'l6', source: 'CTS-Core1', target: 'PRP-ABR', cost: 1, state: 'UP', desc: '100G Research Spine' },
     { id: 'l8', source: 'SJT-ABR', target: 'TT-ABR', cost: 1, state: 'UP', desc: '40G Inter-Tower Conduit' },
-    { id: 'l9', source: 'MH-ABR', target: 'WH-ABR', cost: 1, state: 'UP', desc: '10G Inter-Hostel Ring' }
+    { id: 'l9', source: 'MH-ABR', target: 'WH-ABR', cost: 1, state: 'UP', desc: '10G Inter-Hostel Ring' },
+    { id: 'l10', source: 'SMV-ABR', target: 'SJT-ABR', cost: 1, state: 'UP', desc: '10G Academic Distribution Link' },
+    { id: 'l11', source: 'SMV-ABR', target: 'TT-ABR', cost: 1, state: 'UP', desc: '10G Academic Distribution Link' }
   ]
 };
 
