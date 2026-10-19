@@ -233,7 +233,7 @@ def build_master_final_report():
             elif stripped.startswith("O IA") or stripped.startswith("O*IA") or stripped.startswith("O "):
                 r.font.color.rgb = RGBColor(0x0E, 0x6C, 0x78)
                 r.font.bold = True
-            elif stripped.startswith("T_convergence") or stripped.startswith("Cost =") or stripped.startswith("Time Complexity") or stripped.startswith("Compression Efficiency"):
+            elif stripped.startswith("Total Convergence") or stripped.startswith("Cost =") or stripped.startswith("Time Complexity") or stripped.startswith("Compression Efficiency"):
                 r.font.color.rgb = RGBColor(0x12, 0x3A, 0x5A)
                 r.font.bold = True
             else:
@@ -694,13 +694,13 @@ def build_master_final_report():
 
     add_code_block(
         "Total Convergence Formula:\n"
-        "  T_convergence = T_detect + T_lsu_prop + T_spf_calc + T_fib_update\n\n"
+        "  Total Convergence Time = Hardware Fault Detection + LSA Propagation + Dijkstra Calculation + FIB Update\n\n"
         "Empirical Time Measurements:\n"
-        "  T_detect    : Loss of light & BFD hardware echo detection  = 1.00 ms\n"
-        "  T_lsu_prop  : Type-1 Router LSA flood propagation         = 0.12 ms\n"
-        "  T_spf_calc  : Dijkstra SPT execution on Area 10 graph     = 0.42 ms\n"
-        "  T_fib_update: Hardware CEF / TCAM FIB entry reprogramming = 0.35 ms\n\n"
-        "  TOTAL EMPIRICAL CONVERGENCE TIME                          = 1.89 ms\n\n"
+        "  Hardware Fault Detection (Loss of Light & BFD Hardware Echo) : 1.00 ms\n"
+        "  LSA Flood Propagation (Type-1 Router LSA Transmission)       : 0.12 ms\n"
+        "  Dijkstra Shortest Path Tree Calculation (Area 10 Topology)   : 0.42 ms\n"
+        "  Hardware CEF / TCAM FIB Entry Reprogramming                  : 0.35 ms\n\n"
+        "  Total Empirical Convergence Time                             : 1.89 ms\n\n"
         "SLA Validation: Convergence is completed in 1.89 ms, beating the <= 2 ms SLA.\n"
         "Zero packets were dropped in interactive voice/video sessions."
     )
