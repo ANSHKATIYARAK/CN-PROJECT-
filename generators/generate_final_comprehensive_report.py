@@ -860,23 +860,6 @@ def create_master_report():
     add_bullet("Zero Administrative Route Visibility via Totally Stubby Area 30 filtering, protecting examination databases.", bold_prefix="4. Security Hardening: ")
     add_bullet("Seamless HPC & Cloud Redistribution via NSSA Type-7 translation in Pearl Research Park.", bold_prefix="5. Research Integration: ")
 
-    add_h2("10.1 Master Verification Deliverables Checklist")
-    tbl_deliv = doc.add_table(rows=6, cols=3)
-    tbl_deliv.rows[0].cells[0].text = "Deliverable Item"
-    tbl_deliv.rows[0].cells[1].text = "File Name / Location"
-    tbl_deliv.rows[0].cells[2].text = "Verification Status"
-    deliv_data = [
-        ("Cisco Packet Tracer Topology", "cisco_packet_tracer/Campus_Network_Topology.pkt", "Verified in Packet Tracer 8.2 (58 KB)"),
-        ("Production Web Routing Platform", "https://campus-spine.vercel.app/ (app.js)", "Live Online & Client-Side Tested"),
-        ("Live Wireshark Packet Capture", "assets/vit_campus_ospf_capture.pcap", "Verified in Wireshark 4.6 (6 Frames)"),
-        ("Master Cisco IOS Configurations", "cisco_packet_tracer/ALL_ROUTERS_MASTER_CONFIG.txt", "Ready-to-Paste CLI Configs for 8 Routers"),
-        ("Final Comprehensive Report", "documentation/BAITE203_Lab_Assessment_Final_Master_Report.docx", "Complete Integrated Master Document")
-    ]
-    for idx, row in enumerate(deliv_data):
-        for c in range(3):
-            tbl_deliv.rows[idx+1].cells[c].text = row[c]
-    format_table(tbl_deliv, [Inches(2.5), Inches(3.2), Inches(1.8)])
-
     # Output paths
     output_docx = r"documentation\BAITE203_Lab_Assessment_Final_Comprehensive_Master_Report.docx"
     doc.save(output_docx)
