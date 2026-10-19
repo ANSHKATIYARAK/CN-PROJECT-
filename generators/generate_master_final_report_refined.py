@@ -43,12 +43,7 @@ def build_master_final_report():
     r3.font.color.rgb = RGBColor(0x0D, 0x2B, 0x45)
 
     p4 = doc.paragraphs[4]
-    p4.text = ""
-    r4 = p4.add_run("Lab Assessment Comprehensive Master Report: Reviews 1, 2 & 3 Fully Integrated")
-    r4.font.name = "Lato"
-    r4.font.size = Pt(10.0)
-    r4.font.bold = True
-    r4.font.color.rgb = RGBColor(0x0E, 0x6C, 0x78)
+    p4._p.getparent().remove(p4._p)
 
     # 3. Clear body elements after candidate table (Table 0)
     body = doc._body._element
@@ -409,11 +404,8 @@ def build_master_final_report():
     add_section_h1("Executive Engineering Summary")
     add_body_p(
         "This master engineering document provides the comprehensive, end-to-end design, implementation, and empirical verification "
-        "of an enterprise-grade multi-area Open Shortest Path First (OSPFv2, RFC 2328) routing architecture for the 372-acre Vellore Institute "
-        "of Technology (VIT Vellore) campus network, serving over 40,000 active students and faculty. By consolidating all phases of Review 1 "
-        "(Problem Formulation, VLSM Design & Cisco Configurations), Review 2 (Implementation, Mininet Emulation, Wireshark Protocol Dissection "
-        "& Sub-Second Convergence Testing), and Review 3 (Dijkstra Optimization, TCAM FIB Compression, BFD Integration & Live Digital Twin Platform), "
-        "this report establishes a complete operational benchmark for large-scale enterprise campus networking."
+        "of an enterprise-grade multi-area Open Shortest Path First (OSPF) routing architecture for the 372-acre Vellore Institute "
+        "of Technology (VIT Vellore) campus network, serving over 40,000 active students and faculty."
     )
     add_bullet_p("98.4% TCAM FIB Compression: Hardware routing tables condensed from 248 individual /24 and /28 subnets down to 4 aggregated /16 supernet prefixes.", bold_prefix="1. Route Table Scaling: ")
     add_bullet_p("Sub-Second Link Failover (1.89 ms): Loss of light detection and Bidirectional Forwarding Detection (BFD) achieve fast rerouting well within the <= 2 ms SLA.", bold_prefix="2. Convergence SLA: ")
@@ -506,7 +498,7 @@ def build_master_final_report():
             tbl_vlsm.rows[r_idx].cells[c_idx].text = val
     format_styled_table(tbl_vlsm, [1400, 1900, 1800, 2400, 2364])
 
-    add_subsection_h2("3.1 Plain-Text Mathematical Proof of 98.4% TCAM FIB Compression")
+    add_subsection_h2("3.1 Mathematical Proof of 98.4% TCAM FIB Compression")
     add_body_p(
         "In enterprise multilayer core switches, packet routing lookups are executed in hardware Ternary Content-Addressable Memory (TCAM). "
         "TCAM capacity is strictly finite and power-intensive. Summarizing departmental routes at Area Border Routers drastically compresses "
@@ -514,9 +506,6 @@ def build_master_final_report():
     )
 
     add_code_block(
-        "--------------------------------------------------------------------------------\n"
-        "MATHEMATICAL TCAM FIB COMPRESSION PROOF (PLAIN TEXT)\n"
-        "--------------------------------------------------------------------------------\n"
         "Compression Formula:\n"
         "  Compression Efficiency = (Total Unsummarized Routes - Summarized Routes) / Total Unsummarized Routes\n\n"
         "Empirical Parameter Values:\n"
@@ -531,9 +520,7 @@ def build_master_final_report():
         "                         = 244 / 248\n"
         "                         = 0.9838709...\n"
         "                         = 98.387% (~98.4%)\n\n"
-        "Conclusion: Hardware TCAM FIB memory consumption is reduced by 98.4%, ensuring\n"
-        "all core routing lookups complete within sub-nanosecond L1 hardware cache hit times.\n"
-        "--------------------------------------------------------------------------------"
+        "Conclusion: Hardware TCAM FIB memory consumption is reduced by 98.4%, ensuring all core routing lookups complete within sub-nanosecond L1 hardware cache hit times."
     )
 
     add_image(r"figures\part3_image3.png", width_in=5.4)
@@ -672,30 +659,25 @@ def build_master_final_report():
     )
 
     add_code_block(
-        "--------------------------------------------------------------------------------\n"
-        "MATHEMATICAL CONVERGENCE TIMELINE BREAKDOWN (PLAIN TEXT)\n"
-        "--------------------------------------------------------------------------------\n"
         "Total Convergence Formula:\n"
         "  T_convergence = T_detect + T_lsu_prop + T_spf_calc + T_fib_update\n\n"
         "Empirical Time Measurements:\n"
         "  T_detect    : Loss of light & BFD hardware echo detection  = 1.00 ms\n"
         "  T_lsu_prop  : Type-1 Router LSA flood propagation         = 0.12 ms\n"
         "  T_spf_calc  : Dijkstra SPT execution on Area 10 graph     = 0.42 ms\n"
-        "  T_fib_update: Hardware CEF / TCAM FIB entry reprogramming = 0.35 ms\n"
-        "  ------------------------------------------------------------------\n"
+        "  T_fib_update: Hardware CEF / TCAM FIB entry reprogramming = 0.35 ms\n\n"
         "  TOTAL EMPIRICAL CONVERGENCE TIME                          = 1.89 ms\n\n"
         "SLA Validation: Convergence is completed in 1.89 ms, beating the <= 2 ms SLA.\n"
-        "Zero packets were dropped in interactive voice/video sessions.\n"
-        "--------------------------------------------------------------------------------"
+        "Zero packets were dropped in interactive voice/video sessions."
     )
 
     add_image(r"figures/image4.png", width_in=5.4)
     add_caption("Figure 2.3: Empirical latency and throughput response during primary optical link severance.")
 
-    # SECTION 8: 16-METRIC COMPARISON TABLE
-    add_section_h1("8. Comprehensive 16-Metric Comparative Evaluation")
+    # SECTION 8: PERFORMANCE METRIC EVALUATION & ARCHITECTURE COMPARISON
+    add_section_h1("8. Performance Metric Evaluation & Architecture Comparison")
     add_body_p(
-        "To rigorously quantify routing protocol efficiency, table scaling, and control plane stability, a comprehensive 16-metric "
+        "To rigorously quantify routing protocol efficiency, table scaling, and control plane stability, a comprehensive metric "
         "evaluation was executed comparing the legacy Flat Single-Area 0 design against our Hierarchical 5-Area OSPF architecture:"
     )
 
@@ -740,14 +722,11 @@ def build_master_final_report():
     )
 
     add_code_block(
-        "--------------------------------------------------------------------------------\n"
-        "DIJKSTRA SPF COMPUTATIONAL COMPLEXITY COMPARISON (PLAIN TEXT)\n"
-        "--------------------------------------------------------------------------------\n"
         "Algorithmic Complexity Formula:\n"
-        "  Time Complexity = O(|E| + |V| * log |V|)\n"
-        "  Where:\n"
-        "    |V| = Number of OSPF Routers (Vertices) in LSDB\n"
-        "    |E| = Number of Interconnecting Links (Edges) between Routers\n\n"
+        "  Time Complexity = O(|E| + |V| * log |V|)\n\n"
+        "Where:\n"
+        "  |V| = Number of OSPF Routers (Vertices) in LSDB\n"
+        "  |E| = Number of Interconnecting Links (Edges) between Routers\n\n"
         "Flat Single-Area 0 Complexity:\n"
         "  |V| = 100 Routers, |E| = 150 Links\n"
         "  Operations = 150 + 100 * log2(100) = 150 + 100 * 8.64 = 1,014 Operations\n\n"
@@ -755,8 +734,7 @@ def build_master_final_report():
         "  |V| = 20 Routers, |E| = 30 Links\n"
         "  Operations = 30 + 20 * log2(20) = 30 + 20 * 6.32 = 156 Operations\n\n"
         "Algorithmic CPU Compute Reduction:\n"
-        "  Savings = (1,014 - 156) / 1,014 = 858 / 1,014 = 84.6% Reduction\n"
-        "--------------------------------------------------------------------------------"
+        "  Savings = (1,014 - 156) / 1,014 = 858 / 1,014 = 84.6% Reduction"
     )
 
     add_image(r"figures/part3_image2.png", width_in=5.4)
@@ -769,9 +747,6 @@ def build_master_final_report():
     )
 
     add_code_block(
-        "--------------------------------------------------------------------------------\n"
-        "OSPF INTERFACE METRIC COST CALIBRATION (PLAIN TEXT)\n"
-        "--------------------------------------------------------------------------------\n"
         "Cost Calculation Formula:\n"
         "  Cost = ceil( Reference Bandwidth / Interface Bandwidth )\n\n"
         "Calibrated Parameter:\n"
@@ -781,8 +756,7 @@ def build_master_final_report():
         "  40 Gbps Inter-Tower Conduits   : Cost = 100,000 / 40,000  = 2\n"
         "  10 Gbps Administration Trunks   : Cost = 100,000 / 10,000  = 10\n"
         "  1 Gbps Campus Access Switches   : Cost = 100,000 / 1,000   = 100\n"
-        "  100 Mbps Legacy Fallback Links  : Cost = 100,000 / 100     = 1,000\n"
-        "--------------------------------------------------------------------------------"
+        "  100 Mbps Legacy Fallback Links  : Cost = 100,000 / 100     = 1,000"
     )
 
     add_subsection_h2("9.3 Innovation 3: Dynamic BFD Sub-Second Hardware Failover")
@@ -792,9 +766,6 @@ def build_master_final_report():
     )
 
     add_code_block(
-        "--------------------------------------------------------------------------------\n"
-        "BFD SUB-SECOND HARDWARE DETECTION (PLAIN TEXT)\n"
-        "--------------------------------------------------------------------------------\n"
         "Detection Time Formula:\n"
         "  Hardware Detection Time = BFD Echo Interval * Detect Multiplier\n\n"
         "Configured Interface Values:\n"
@@ -803,8 +774,7 @@ def build_master_final_report():
         "Performance Comparison:\n"
         "  Standard OSPF Dead Interval = 40,000 ms (40 seconds)\n"
         "  Hardware BFD Detection      = 150 ms (0.15 seconds)\n"
-        "  Improvement Factor          = 266x Faster Fault Detection\n"
-        "--------------------------------------------------------------------------------"
+        "  Improvement Factor          = 266x Faster Fault Detection"
     )
 
     add_subsection_h2("9.4 Innovation 4: Hardware TCAM Compression & Green Data Center Power Efficiency")
