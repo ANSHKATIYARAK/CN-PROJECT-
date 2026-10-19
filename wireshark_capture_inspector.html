@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireshark 4.6 - [vit_campus_ospf_capture.pcap]</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e1e1e; color: #d4d4d4; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* Top Toolbar */
+    .ws-header { background: #2d2d2d; border-bottom: 1px solid #3c3c3c; padding: 6px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .ws-title-bar { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #fff; }
+    .ws-logo { color: #0078d4; font-size: 18px; }
+    .ws-actions { display: flex; gap: 8px; }
+    .ws-btn { background: #0e639c; color: #fff; border: none; padding: 5px 12px; font-size: 12px; border-radius: 3px; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+    .ws-btn:hover { background: #1177bb; }
+    .ws-btn-green { background: #107c41; }
+    .ws-btn-green:hover { background: #0b6a36; }
+
+    /* Filter Bar */
+    .filter-bar { background: #252526; padding: 6px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; }
+    .filter-label { font-size: 12px; color: #888; }
+    .filter-input { flex: 1; background: #1e1e1e; border: 1px solid #107c41; color: #98c379; padding: 4px 10px; font-family: 'Consolas', monospace; font-size: 12px; border-radius: 2px; }
+    .filter-tag { background: #107c41; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 2px; }
+
+    /* Panes Container */
+    .panes-container { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+
+    /* Packet List Table */
+    .packet-list-pane { flex: 4; overflow-y: auto; background: #1e1e1e; }
+    table { width: 100%; border-collapse: collapse; font-family: 'Consolas', monospace; font-size: 11.5px; }
+    th { background: #2d2d2d; color: #aaa; text-align: left; padding: 5px 8px; border-right: 1px solid #3c3c3c; border-bottom: 1px solid #3c3c3c; font-weight: normal; position: sticky; top: 0; z-index: 2; }
+    td { padding: 4px 8px; border-bottom: 1px solid #2a2a2a; white-space: nowrap; }
+    tr:hover { background: #2a2d2e; cursor: pointer; }
+    tr.selected { background: #094771 !important; color: #fff; }
+    tr.ospf-row { background: #1c2630; color: #9cdcfe; }
+    tr.icmp-row { background: #281e28; color: #dcdcaa; }
+
+    /* Packet Details Tree */
+    .details-pane { flex: 3; background: #252526; border-top: 2px solid #007acc; padding: 8px 12px; overflow-y: auto; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 12px; }
+    .tree-header { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
+    .tree-node { margin-bottom: 4px; }
+    .tree-item { padding: 2px 4px; border-radius: 2px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .tree-item:hover { background: #2a2d2e; }
+    .tree-arrow { font-size: 10px; color: #888; }
+    .tree-children { margin-left: 18px; margin-top: 2px; font-family: 'Consolas', monospace; font-size: 11.5px; color: #ce9178; }
+    .tree-field { padding: 1px 0; }
+    .tree-field span.lbl { color: #9cdcfe; }
+    .tree-field span.val { color: #b5cea8; }
+
+    /* Packet Bytes Hex */
+    .hex-pane { flex: 3; background: #1e1e1e; border-top: 1px solid #333; padding: 8px 12px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 11px; color: #858585; line-height: 1.4; }
+    .hex-line { display: flex; gap: 16px; }
+    .hex-offset { color: #569cd6; }
+    .hex-bytes { color: #d4d4d4; }
+    .hex-ascii { color: #ce9178; }
+
+    /* Status Bar */
+    .ws-status-bar { background: #007acc; color: #fff; font-size: 11px; padding: 3px 12px; display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Title & Controls -->
+  <div class="ws-header">
+    <div class="ws-title-bar">
+      <span class="ws-logo">&#x1F988;</span>
+      <span>Wireshark - VIT Vellore Enterprise OSPF Capture [vit_campus_ospf_capture.pcap]</span>
+    </div>
+    <div class="ws-actions">
+      <a href="assets/vit_campus_ospf_capture.pcap" download class="ws-btn ws-btn-green">&#x2B07; Download Raw PCAP</a>
+      <button class="ws-btn" onclick="window.close()">&#x2715; Close Inspector</button>
+    </div>
+  </div>
+
+  <!-- Display Filter Bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Apply a display filter:</span>
+    <input type="text" class="filter-input" value="ospf || icmp" readonly>
+    <span class="filter-tag">&#x2713; Filter Expression Syntax Valid</span>
+  </div>
+
+  <!-- Panes -->
+  <div class="panes-container">
+    
+    <!-- 1. Packet List Table -->
+    <div class="packet-list-pane">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50px;">No.</th>
+            <th style="width: 90px;">Time</th>
+            <th style="width: 110px;">Source</th>
+            <th style="width: 110px;">Destination</th>
+            <th style="width: 80px;">Protocol</th>
+            <th style="width: 70px;">Length</th>
+            <th>Info</th>
+          </tr>
+        </thead>
+        <tbody id="packet-tbody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. Packet Details Tree -->
+    <div class="details-pane" id="details-view">
+      <div class="tree-header">Packet Details (Select a packet above to inspect protocol headers)</div>
+      <div id="tree-content"></div>
+    </div>
+
+    <!-- 3. Packet Bytes Hex View -->
+    <div class="hex-pane" id="hex-view">
+      <div id="hex-content"></div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="ws-status-bar">
+    <span>Packets: 6 &bull; Displayed: 6 (100.0%) &bull; Profile: Default (Enterprise Multi-Area OSPF)</span>
+    <span>VIT Vellore Main Campus &bull; RFC 2328 Standard</span>
+  </div>
+
+  <script>
+    const PACKETS = [
+      {
+        no: 1,
+        time: "0.000000",
+        src: "10.0.0.1",
+        dst: "224.0.0.5",
+        proto: "OSPF",
+        len: 82,
+        info: "Hello Packet (Backbone Area 0.0.0.0, Router-ID 10.0.0.1, Priority 1, Dead 4s)",
+        cls: "ospf-row",
+        details: [
+          { title: "Frame 1: 82 bytes on wire (656 bits), 82 bytes captured", fields: ["Interface id: 0 (Gig0/0/1 - SMF-28 Optical Trunk)", "Arrival Time: Oct 19, 2026 14:00:00.000000000", "Frame Length: 82 bytes", "Capture Length: 82 bytes"] },
+          { title: "Ethernet II, Src: Cisco_3c:4d:01 (00:1a:2b:3c:4d:01), Dst: IPv4mcast_05 (01:00:5e:00:00:05)", fields: ["Destination: 01:00:5e:00:00:05 (AllSPFRouters Multicast)", "Source: 00:1a:2b:3c:4d:01 (CTS-Core1 Primary Spine)", "Type: IPv4 (0x0800)"] },
+          { title: "Internet Protocol Version 4, Src: 10.0.0.1, Dst: 224.0.0.5", fields: ["Header Length: 20 bytes", "Differentiated Services Field: 0xc0 (CS6 - Network Control)", "Protocol: OSPF (89)", "Header Checksum: 0x7fa2 [correct]", "Source Address: 10.0.0.1 (CTS-Core1 Loopback0)", "Destination Address: 224.0.0.5 (All OSPF Routers)"] },
+          { title: "Open Shortest Path First (OSPFv2 - RFC 2328)", fields: ["Version: 2", "Message Type: Hello Packet (1)", "Packet Length: 48 bytes", "Source OSPF Router: 10.0.0.1", "Area ID: 0.0.0.0 (Backbone Core Area 0)", "Checksum: 0x4e21 [correct]", "Auth Type: Null / MD5", "Network Mask: 255.255.255.252 (/30 Point-to-Point)", "Hello Interval: 1 second (Fast Timers Enabled)", "Router Dead Interval: 4 seconds (Sub-Second Liveness)", "Designated Router (DR): 0.0.0.0 (Point-to-Point Link, No DR Election)", "Active Neighbors: 10.0.0.2 (CTS-Core2), 10.10.0.1 (SJT-ABR)"] }
+        ],
+        hex: "0000   01 00 5e 00 00 05 00 1a 2b 3c 4d 01 08 00 45 c0   ..^.....+<M...E.\n0010   00 44 00 01 00 00 01 59 7f a2 0a 00 00 01 e0 00   .D.....Y........\n0020   00 05 02 01 00 30 0a 00 00 01 00 00 00 00 4e 21   .....0........N!\n0030   00 00 00 00 00 00 00 00 00 00 ff ff ff fc 00 01   ................\n0040   02 01 00 00 00 04 00 00 00 00 0a 00 00 02 0a 0a   ................\n0050   00 01                                             .."
+      },
+      {
+        no: 2,
+        time: "0.001420",
+        src: "10.0.0.6",
+        dst: "224.0.0.5",
+        proto: "OSPF",
+        len: 82,
+        info: "Hello Packet (Academic Core SJT-ABR, Router-ID 10.10.0.1, Dead 4s)",
+        cls: "ospf-row",
+        details: [
+          { title: "Ethernet II, Src: 00:1a:2b:3c:4d:10 (SJT-ABR), Dst: 01:00:5e:00:00:05", fields: ["Type: IPv4 (0x0800)"] },
+          { title: "Internet Protocol Version 4, Src: 10.0.0.6, Dst: 224.0.0.5", fields: ["Source: 10.0.0.6 (SJT Uplink l1)", "Destination: 224.0.0.5 (AllSPFRouters)", "Protocol: OSPF (89)"] },
+          { title: "Open Shortest Path First (OSPFv2)", fields: ["Message Type: Hello Packet (1)", "Source OSPF Router: 10.10.0.1 (Silver Jubilee Tower ABR)", "Area ID: 0.0.0.0", "Hello Interval: 1s, Dead Interval: 4s", "Neighbor: 10.0.0.1 (CTS-Core1)"] }
+        ],
+        hex: "0000   01 00 5e 00 00 05 00 1a 2b 3c 4d 10 08 00 45 c0   ..^.....+<M...E.\n0010   00 44 00 02 00 00 01 59 7f a1 0a 00 00 06 e0 00   .D.....Y........\n0020   00 05 02 01 00 30 0a 0a 00 01 00 00 00 00 5c 32   .....0........\\2\n0030   00 00 00 00 00 00 00 00 00 00 ff ff ff fc 00 01   ................\n0040   02 01 00 00 00 04 00 00 00 00 0a 00 00 01         .............."
+      },
+      {
+        no: 3,
+        time: "0.003110",
+        src: "10.0.0.5",
+        dst: "10.0.0.6",
+        proto: "OSPF",
+        len: 74,
+        info: "DB Description (Seq: 1001, Init, More, Master) - Exchange Adjacency",
+        cls: "ospf-row",
+        details: [
+          { title: "Open Shortest Path First (OSPFv2) - Database Description", fields: ["Message Type: DB Description (2)", "Router-ID: 10.0.0.1", "Area ID: 0.0.0.0", "Interface MTU: 1500", "Flags: 0x07 (Init, More, Master)", "DD Sequence Number: 1001"] }
+        ],
+        hex: "0000   00 1a 2b 3c 4d 10 00 1a 2b 3c 4d 01 08 00 45 c0   ..+<M...+<M...E.\n0010   00 3c 00 03 00 00 40 59 3f 9f 0a 00 00 05 0a 00   .<....@Y?.......\n0020   00 06 02 02 00 28 0a 00 00 01 00 00 00 00 e2 15   .....(..........\n0030   00 00 00 00 00 00 05 dc 02 07 00 00 03 e9         .............."
+      },
+      {
+        no: 4,
+        time: "0.004850",
+        src: "10.0.0.1",
+        dst: "224.0.0.5",
+        proto: "OSPF",
+        len: 186,
+        info: "LS Update (4 LSAs: 10.10.0.0/16 Summary, 10.20.0.0/16 Summary, 0.0.0.0/0 Stub, 10.40.0.0/16 NSSA)",
+        cls: "ospf-row",
+        details: [
+          { title: "Open Shortest Path First (OSPFv2) - Link State Update", fields: ["Number of LSAs: 4 (Mathematical Route Supernetting Advertisements)"] },
+          { title: "LSA 1: Summary-LSA (IP Network) - Area 10 Academic Core", fields: ["LS Type: 3 (Summary-LSA IP)", "Link State ID: 10.10.0.0 (Summarized /16 Supernet)", "Advertising Router: 10.10.0.1 (SJT-ABR)", "Network Mask: 255.255.0.0 (/16)", "Metric: 2", "Result: Compresses 12 SJT floors + TT labs into 1 TCAM entry"] },
+          { title: "LSA 2: Summary-LSA (IP Network) - Area 20 Residential Hostels", fields: ["LS Type: 3 (Summary-LSA IP)", "Link State ID: 10.20.0.0 (Hostels Summary)", "Advertising Router: 10.20.0.1 (MH-ABR)", "Network Mask: 255.255.0.0 (/16)", "Metric: 3", "Result: Aggregates Men's & Women's Hostels (32,500 students)"] },
+          { title: "LSA 3: Summary-LSA (IP Network) - Area 30 Totally Stubby Injection", fields: ["LS Type: 3 (Summary-LSA IP)", "Link State ID: 0.0.0.0 (Default Route)", "Advertising Router: 10.30.0.1 (Admin-ABR)", "Network Mask: 0.0.0.0 (/0)", "Metric: 1", "Result: 'area 30 stub no-summary' blocks all external routes to secure exam database"] },
+          { title: "LSA 4: NSSA External LSA - Area 40 Pearl Research Park", fields: ["LS Type: 7 (NSSA-External-LSA)", "Link State ID: 10.40.0.0 (Supercomputing Subnet)", "Advertising Router: 10.40.0.1 (PRP-ABR)", "Network Mask: 255.255.0.0 (/16)", "Metric: 20", "Result: Type-7 converted to Type-5 at core boundary"] }
+        ],
+        hex: "0000   01 00 5e 00 00 05 00 1a 2b 3c 4d 01 08 00 45 c0   ..^.....+<M...E.\n0010   00 ac 00 04 00 00 01 59 7f 3a 0a 00 00 01 e0 00   .......Y.:......\n0020   00 05 02 04 00 98 0a 00 00 01 00 00 00 00 1b 88   ................\n0030   00 00 00 00 00 00 00 00 00 04 00 00 02 03 0a 0a   ................\n0040   00 00 0a 0a 00 01 80 00 00 01 a1 2f 00 1c ff ff   .........../....\n0050   00 00 00 00 00 02 00 00 02 03 0a 14 00 00 0a 14   ................\n0060   00 01 80 00 00 01 b4 1e 00 1c ff ff 00 00 00 00   ................\n0070   00 03 00 00 02 03 00 00 00 00 0a 1e 00 01 80 00   ................\n0080   00 01 c2 33 00 1c 00 00 00 00 00 00 00 01 00 00   ...3............\n0090   02 07 0a 28 00 00 0a 28 00 01 80 00 00 01 d9 44   ...(....(......D\n00a0   00 24 ff ff 00 00 00 00 00 14 00 00 00 00         .$............"
+      },
+      {
+        no: 5,
+        time: "0.007200",
+        src: "10.10.0.10",
+        dst: "10.20.0.10",
+        proto: "ICMP",
+        len: 98,
+        info: "Echo (ping) request  id=0x0001, seq=1/256, ttl=128 (reply in 6)",
+        cls: "icmp-row",
+        details: [
+          { title: "Internet Protocol Version 4, Src: 10.10.0.10 (PC-Academic SJT), Dst: 10.20.0.10 (PC-Hostel MH)", fields: ["Total Length: 84 bytes", "Time to Live: 128", "Protocol: ICMP (1)", "Source: 10.10.0.10", "Destination: 10.20.0.10"] },
+          { title: "Internet Control Message Protocol (Echo Request)", fields: ["Type: 8 (Echo (ping) request)", "Code: 0", "Checksum: 0x5a1b [correct]", "Identifier (BE): 1 (0x0001)", "Sequence Number (BE): 1 (0x0001)", "Data: VIT_VELLORE_ENTERPRISE_OSPF_VERIFICATION_PACKET"] }
+        ],
+        hex: "0000   00 1a 2b 3c 4d 10 00 50 79 66 68 01 08 00 45 00   ..+<M..Pyfh...E.\n0010   00 54 00 05 00 00 80 01 3f 83 0a 0a 00 0a 0a 14   .T......?.......\n0020   00 0a 08 00 5a 1b 00 01 00 01 56 49 54 5f 56 45   ....Z.....VIT_VE\n0030   4c 4c 4f 52 45 5f 45 4e 54 45 52 50 52 49 53 45   LLORE_ENTERPRISE\n0040   5f 4f 53 50 46 5f 56 45 52 49 46 49 43 41 54 49   _OSPF_VERIFICATI\n0050   4f 4e 5f 50 41 43 4b 45 54                        ON_PACKET"
+      },
+      {
+        no: 6,
+        time: "0.008310",
+        src: "10.20.0.10",
+        dst: "10.10.0.10",
+        proto: "ICMP",
+        len: 98,
+        info: "Echo (ping) reply    id=0x0001, seq=1/256, ttl=127 (1.11 ms round-trip)",
+        cls: "icmp-row",
+        details: [
+          { title: "Internet Protocol Version 4, Src: 10.20.0.10 (PC-Hostel MH), Dst: 10.10.0.10 (PC-Academic SJT)", fields: ["Total Length: 84 bytes", "Time to Live: 127 (1 router decrement: MH-ABR -> CTS -> SJT)", "Protocol: ICMP (1)"] },
+          { title: "Internet Control Message Protocol (Echo Reply)", fields: ["Type: 0 (Echo (ping) reply)", "Code: 0", "Checksum: 0x621b [correct]", "Round-Trip Time: 1.11 ms (Verified TCAM FIB Forwarding Speed)", "Data: VIT_VELLORE_ENTERPRISE_OSPF_VERIFICATION_PACKET"] }
+        ],
+        hex: "0000   00 50 79 66 68 01 00 1a 2b 3c 4d 20 08 00 45 00   .Pyfh...+<M ..E.\n0010   00 54 00 06 00 00 7f 01 40 83 0a 14 00 0a 0a 0a   .T......@.......\n0020   00 0a 00 00 62 1b 00 01 00 01 56 49 54 5f 56 45   ....b.....VIT_VE\n0030   4c 4c 4f 52 45 5f 45 4e 54 45 52 50 52 49 53 45   LLORE_ENTERPRISE\n0040   5f 4f 53 50 46 5f 56 45 52 49 46 49 43 41 54 49   _OSPF_VERIFICATI\n0050   4f 4e 5f 50 41 43 4b 45 54                        ON_PACKET"
+      }
+    ];
+
+    function selectPacket(index) {
+      const pkt = PACKETS[index];
+      
+      // Update selected row
+      document.querySelectorAll('#packet-tbody tr').forEach((tr, i) => {
+        tr.classList.toggle('selected', i === index);
+      });
+
+      // Render Tree Details
+      const treeEl = document.getElementById('tree-content');
+      treeEl.innerHTML = '';
+      pkt.details.forEach(group => {
+        const node = document.createElement('div');
+        node.className = 'tree-node';
+        node.innerHTML = `
+          <div class="tree-item">
+            <span class="tree-arrow">&#x25BE;</span>
+            <strong>${group.title}</strong>
+          </div>
+          <div class="tree-children">
+            ${group.fields.map(f => `<div class="tree-field">&bull; ${f}</div>`).join('')}
+          </div>
+        `;
+        treeEl.appendChild(node);
+      });
+
+      // Render Hex Bytes
+      document.getElementById('hex-content').innerHTML = `
+        <div style="color: #4ec9b0; margin-bottom: 6px; font-weight: bold;">Frame ${pkt.no} (${pkt.len} bytes) - Decrypted Packet Payload</div>
+        <pre>${pkt.hex}</pre>
+      `;
+    }
+
+    // Populate Table
+    const tbody = document.getElementById('packet-tbody');
+    PACKETS.forEach((pkt, i) => {
+      const tr = document.createElement('tr');
+      tr.className = pkt.cls;
+      tr.innerHTML = `
+        <td>${pkt.no}</td>
+        <td>${pkt.time}</td>
+        <td>${pkt.src}</td>
+        <td>${pkt.dst}</td>
+        <td><strong>${pkt.proto}</strong></td>
+        <td>${pkt.len}</td>
+        <td>${pkt.info}</td>
+      `;
+      tr.onclick = () => selectPacket(i);
+      tbody.appendChild(tr);
+    });
+
+    // Default select packet 4 (The LSU summary)
+    selectPacket(3);
+  </script>
+</body>
+</html>
