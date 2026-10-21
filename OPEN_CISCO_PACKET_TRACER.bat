@@ -13,8 +13,9 @@ set SETUP_EXE=%PROJECT_DIR%tools\CiscoPacketTracer_820_setup.exe
 set PT_FOUND=0
 set PT_EXE=""
 
-:: Check common installation paths for Cisco Packet Tracer
+:: Check local tools and system installation paths for Cisco Packet Tracer
 for %%P in (
+    "%PROJECT_DIR%tools\CiscoPacketTracer\app\bin\PacketTracer.exe"
     "C:\Program Files\Cisco Packet Tracer 8.2.2\bin\PacketTracer.exe"
     "C:\Program Files\Cisco Packet Tracer 8.2.1\bin\PacketTracer.exe"
     "C:\Program Files\Cisco Packet Tracer 8.2.0\bin\PacketTracer.exe"
@@ -50,10 +51,11 @@ goto open_docs
 :launch_pt
 echo [OK] Detected Cisco Packet Tracer at: %PT_EXE%
 echo Launching Cisco Packet Tracer with Campus_Network_Topology.pkt...
+for %%F in (%PT_EXE%) do set "PT_DIR=%%~dpF"
 if exist "%PKT_FILE%" (
-    start "" %PT_EXE% "%PKT_FILE%"
+    start "" /d "%PT_DIR%" %PT_EXE% "%PKT_FILE%"
 ) else (
-    start "" %PT_EXE%
+    start "" /d "%PT_DIR%" %PT_EXE%
 )
 
 :open_docs
