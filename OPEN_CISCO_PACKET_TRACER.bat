@@ -50,13 +50,9 @@ goto open_docs
 
 :launch_pt
 echo [OK] Detected Cisco Packet Tracer at: %PT_EXE%
-echo Launching Cisco Packet Tracer with Campus_Network_Topology.pkt...
+echo Launching Cisco Packet Tracer...
 for %%F in (%PT_EXE%) do set "PT_DIR=%%~dpF"
-if exist "%PKT_FILE%" (
-    start "" /d "%PT_DIR%" %PT_EXE% "%PKT_FILE%"
-) else (
-    start "" /d "%PT_DIR%" %PT_EXE%
-)
+start "" /d "%PT_DIR%" %PT_EXE%
 
 :open_docs
 echo.
