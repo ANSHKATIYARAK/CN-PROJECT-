@@ -8,7 +8,7 @@ echo ===========================================================================
 echo.
 
 set PROJECT_DIR=%~dp0
-set PKT_FILE=%PROJECT_DIR%cisco_packet_tracer\Campus_Network_Topology.pkt
+set PKT_FILE=%PROJECT_DIR%Campus_Network_Topology.pkt
 set SETUP_EXE=%PROJECT_DIR%tools\CiscoPacketTracer_820_setup.exe
 set PT_FOUND=0
 set PT_EXE=""
@@ -50,9 +50,13 @@ goto open_docs
 
 :launch_pt
 echo [OK] Detected Cisco Packet Tracer at: %PT_EXE%
-echo Launching Cisco Packet Tracer...
+echo Launching Cisco Packet Tracer with %PKT_FILE%...
 for %%F in (%PT_EXE%) do set "PT_DIR=%%~dpF"
-start "" /d "%PT_DIR%" %PT_EXE%
+if exist "%PKT_FILE%" (
+    start "" /d "%PT_DIR%" %PT_EXE% "%PKT_FILE%"
+) else (
+    start "" /d "%PT_DIR%" %PT_EXE%
+)
 
 :open_docs
 echo.
